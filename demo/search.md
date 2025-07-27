@@ -304,28 +304,22 @@ flowchart LR
 # Create a graph with nodes and edges
 G = nx.Graph()
 G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=6)
-G.add_edge("A", "D", weight=1)
-G.add_edge("B", "C", weight=5)
-G.add_edge("B", "D", weight=2)
-G.add_edge("B", "E", weight=3)
-G.add_edge("C", "D", weight=2)
-G.add_edge("C", "E", weight=4)
+G.add_edge("A", "B", weight=4)
+G.add_edge("A", "D", weight=2)
+G.add_edge("B", "D", weight=1)
+G.add_edge("B", "C", weight=8)
+G.add_edge("C", "D", weight=5)
+G.add_edge("C", "E", weight=3)
+G.add_edge("D", "E", weight=9)
 
 # Create a list of edges in the shortest path
 path_edges = list(zip(path, path[1:]))
 
-# Create a list of all edges, and assign colors based on whether they are in the shortest path or not
-edge_colors = [
-    "red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "lightgray"
-    for edge in G.edges()
-]
-
 # Visualize the graph
-pos = nx.spring_layout(G, seed=3)
-nx.draw_networkx_nodes(G, pos, node_color="#1f78b4", node_size=200, alpha=0.9)
-nx.draw_networkx_edges(G, pos, edge_color=edge_colors, width=2)
-nx.draw_networkx_labels(G, pos, font_size=12, font_color="white")
+pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
+nx.draw_networkx_nodes(G, pos, node_size=100, node_color="lightblue", alpha=0.8)
+nx.draw_networkx_edges(G, pos, edge_color="lightgray", width=2)
+nx.draw_networkx_labels(G, pos)
 nx.draw_networkx_edge_labels(
     G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
 )
@@ -333,21 +327,10 @@ nx.draw_networkx_edge_labels(
 plt.show()
 ```
 
-```{code-cell} python
-:tags: [remove-input, hide-cell]
-# Find the shortest path from node A to node E
-path = nx.shortest_path(G, "A", "E", weight="weight")
-print(path)
-```
-
 幅優先探索は、**探索木**（search tree）を使用し、系統的に状態を探索する方法である。
 
 ```python
-# bfs algorithm full search
-def bfs(graph, start, goal):
-    visited = set()  # 訪問済みの頂点
-    queue = [(start, [start], 0)]  # (現在の頂点, 経路, コスト)
-
+def sear
 ```
 
 **Step 1:** 初期状態Aから探索を開始する。
