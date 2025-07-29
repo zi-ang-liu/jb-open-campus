@@ -25,6 +25,7 @@ kernelspec:
 ```{code-cell} python
 :tags: [remove-input, remove-output]
 !pip install networkx
+!pip install matplotlib
 import networkx as nx
 import matplotlib.pyplot as plt
 ```
