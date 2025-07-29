@@ -21,9 +21,9 @@ kernelspec:
 田中さんは、法政大学のオープンキャンパスに参加するため、横浜駅から東小金井駅まで、「横浜駅」から「東小金井駅」までできるだけ早く行きたいと思っている。
 
 下の図は、電車路線を単純化したものである。頂点は駅、線は駅と駅を結ぶ線路を表し、数値は、所要時間（分）を表す。
-
-```{code-cell} python
 :tags: [remove-input, remove-output]
+```{code-cell} python
+
 !pip install networkx
 !pip install matplotlib
 
