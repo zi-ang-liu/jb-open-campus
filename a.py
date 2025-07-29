@@ -1,15 +1,20 @@
-import networkx as nx
-import matplotlib.pyplot as plt
+from collections import deque
 
-# Create a simple tree (e.g., a binary tree)
-T = nx.balanced_tree(r=2, h=3)  # binary tree with height 3
 
-# Use graphviz_layout for tree-like layout
-from networkx.drawing.nx_agraph import graphviz_layout
+def bfs(graph, start, goal):
+    queue = deque([(start, [start])])
+    visited = set()
 
-# Create position dictionary using graphviz
-pos = graphviz_layout(T, prog="dot")  # 'dot' gives a vertical tree
+    while queue:
+        current_node, path = queue.popleft()
 
-# Draw the graph
-nx.draw(T, pos, with_labels=True, arrows=False, node_size=500, node_color="lightblue")
-plt.show()
+        if current_node == goal:
+            return path
+
+        if current_node not in visited:
+            visited.add(current_node)
+            for neighbor in graph.get(current_node, []):
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+    return None

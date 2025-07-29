@@ -6,22 +6,21 @@ kernelspec:
 
 # 探索による問題解決
 
-:::{important} Objective 
-- コンピューターを使って問題を解決する方法を理解する
-- アルゴリズムの基本的な考え方を学ぶ
-- 簡単な最短経路問題を解けるようになる
-- 探索アルゴリズムを用いて、さまざまな問題が解決できることを理解する
+:::{important} 学習目標 
+- コンピュータがどのようにして「問題を解く」のか、その考え方を知る
+- アルゴリズムの基本的な考え方を理解する
+- 探索アルゴリズムが、いろいろな現実の問題にも役立つことを知る
 :::
 
 
-## 考えてみよう
+## クイズ
 
 ````{prf:example}
 :nonumber:
 
-田中さんは、法政大学のオープンキャンパスに参加するため、横浜駅から東小金井駅まで、できるだけ早く到着できるルートを探している。
+田中さんは、法政大学のオープンキャンパスに参加するため、横浜駅から東小金井駅まで、「横浜駅」から「東小金井駅」までできるだけ早く行きたいと思っている。
 
-下の図は、鉄道路線を簡略化したものである。各頂点は駅を、各辺は駅を結ぶ鉄道路線を表している。辺に付けられた数値は、それぞれの駅間を移動するのにかかる時間（分）である。
+下の図は、電車路線を単純化したものである。頂点は駅、線は駅と駅を結ぶ線路を表し、数値は、所要時間（分）を表す。
 
 ```{code-cell} python
 :tags: [remove-input, remove-output]
@@ -33,7 +32,13 @@ import matplotlib.pyplot as plt
 ```{code-cell} python
 :tags: [remove-input]
 
+import networkx as nx
+import matplotlib.pyplot as plt
+
 from typing import Dict, Tuple, List, Optional
+
+# enable Japanese characters in matplotlib
+plt.rcParams["font.family"] = "Arial Unicode MS"
 
 # === Data Definitions ===
 
@@ -41,20 +46,20 @@ StationCoords = Dict[str, Tuple[float, float]]
 EdgeList = List[Tuple[str, str, int]]
 
 stations: StationCoords = {
-    "Higashi-Koganei": (35.701549, 139.523898),
-    "Shinjuku": (35.689732, 139.700908),
-    "Yokohama": (35.466102, 139.622140),
-    "Tokyo": (35.681320, 139.767218),
-    "Hachioji": (35.655670, 139.338986),
+    "東小金井": (35.701549, 139.523898),
+    "新宿": (35.689732, 139.700908),
+    "横浜": (35.466102, 139.622140),
+    "東京": (35.681320, 139.767218),
+    "八王子": (35.655670, 139.338986),
 }
 
 edges: EdgeList = [
-    ("Higashi-Koganei", "Shinjuku", 22),
-    ("Shinjuku", "Yokohama", 33),
-    ("Yokohama", "Tokyo", 26),
-    ("Shinjuku", "Tokyo", 15),
-    ("Higashi-Koganei", "Hachioji", 32),
-    ("Hachioji", "Yokohama", 50),
+    ("東小金井", "新宿", 22),
+    ("新宿", "横浜", 33),
+    ("横浜", "東京", 26),
+    ("新宿", "東京", 15),
+    ("東小金井", "八王子", 32),
+    ("八王子", "横浜", 50),
 ]
 
 # === Utility Functions ===
@@ -89,10 +94,10 @@ def draw_network(
     pos: Dict[str, Tuple[float, float]],
     shortest_path: Optional[List[str]] = None,
 ) -> None:
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(8, 4))
 
     # === Draw base nodes and edges ===
-    nx.draw_networkx_nodes(G, pos, node_size=100, node_color="#1f78b4", alpha=0.8)
+    nx.draw_networkx_nodes(G, pos, node_size=80, node_color="#1f78b4", alpha=0.8)
     nx.draw_networkx_edges(G, pos, edge_color="lightgray", width=2)
 
     # === Highlight shortest path ===
@@ -112,13 +117,13 @@ def draw_network(
 
     # === Labels for nodes ===
     for station, (x, y) in pos.items():
-        offset = 0.01 if station != "Yokohama" else -0.01
-        va = "bottom" if station != "Yokohama" else "top"
+        offset = 0.01 if station != "横浜" else -0.01
+        va = "bottom" if station != "横浜" else "top"
         plt.text(
             x,
             y + offset,
             station,
-            fontsize=10,
+            fontsize=12,
             ha="center",
             va=va,
             bbox=dict(
@@ -128,80 +133,178 @@ def draw_network(
 
     # === Edge labels (travel time) ===
     edge_labels = {(u, v): f"{d} min" for u, v, d in G.edges(data="weight")}
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
 
     # === Decorations ===
-    plt.title("Train Route Network", fontsize=14, fontweight="bold")
-    plt.xlabel("")
-    plt.ylabel("")
+    # without 枠
+    plt.axis("off")
     plt.tight_layout()
     plt.show()
 
 
 # Define source/target and execute
-source = "Yokohama"
-target = "Higashi-Koganei"
+source = "横浜"
+target = "東小金井"
 
 graph = create_graph(stations, edges)
 pos = get_position_map(stations)
 
 draw_network(graph, pos)
+
 ```
 
-次の問題を考えてみよう。
+横浜駅から東小金井駅まで、最短で到達するための経路はどれか？
 
-1. 横浜駅から東小金井駅まで、どのルートを通ると、最も早く到着できるか？
+1. 横浜駅 ➝ 新宿駅 ➝ 東小金井駅
+2. 横浜駅 ➝ 東京駅 ➝ 新宿駅 ➝ 東小金井駅
+3. 横浜駅 ➝ 八王子駅 ➝ 東小金井駅
 
 ```{code-cell} python
 :tags: [hide-cell, remove-input]
 # shortest path
 path, time = compute_shortest_path(graph, source, target)
-print("Best Route:", " ➝ ".join(path))
-print("Estimated Time:", time, "minutes")
+print("答え:", " ➝ ".join(path))
+print("時間:", time, "分")
 draw_network(graph, pos, shortest_path=path)
 ```
-
 ````
+
+🤔コンピューターはどのようにしてこの問題を解くのだろうか？
+
+
+## 問題解決の手順
+
+```mermaid
+flowchart TD
+    問題の理解 --> 数学モデル
+    数学モデル --> アルゴリズム
+    アルゴリズム --> 答え
+```
 
 ## 問題の理解
 
 - 出発地：横浜駅
 - 目的地：東小金井駅
-- 手段：鉄道を利用して、駅から駅へ移動する
-- 制約：与えられた鉄道路線図に従うこと
-- 目標：移動にかかる時間が最も短い経路を見つけること
+- 手段：電車を利用して、駅から駅へ移動する
+- 制約：決められた路線図にしたがって移動する
+- 目標：合計の移動時間が最も短くなるようにする
 
 ## モデリング
 
-### 数学モデル
-
+:::{note} 数学モデル
 - **初期状態**：横浜駅
 - **目標状態**：東小金井駅
-- **状態空間**：横浜駅、東小金井駅、東京駅、八王子駅などの駅の集合
-- **行動**：ある駅から隣接する駅へ移動すること
-  - 横浜駅からは「東京駅へ行く」「八王子駅へ行く」「新宿駅へ行く」といった行動が可能
-  - 東小金井駅からは「新宿駅へ行く」「八王子駅へ行く」といった行動が可能
-- **状態遷移**：行動を実行することで、状態が変化する
-  - 横浜駅から「八王子駅へ行く」と移動すると、状態は八王子駅に変わる
-- **コスト**：各行動には、移動にかかる時間（分）というコストが発生する
-  - 「八王子駅へ行く」行動は、移動時間が50分かかる
+- **状態空間**：駅全体（横浜、新宿、八王子、東京など）
+- **行動**：ある駅から別の駅へ移動すること
+- **状態遷移**：移動によって駅が変わること
+- **コスト**：各移動にかかる時間（分）
 
-### 解と最適解
+:::{tip} 数式
+:class: dropdown
+
+この模擬授業では、複雑な数学記号を使わないが、上記の内容を数式で表すと以下のようになる。
+
+- **初期状態**：$s_0$
+- **目標状態**：$s_T$
+- **状態空間**：$\mathcal{S} = \{s_0, s_1, s_2, \ldots, s_n\}$
+- **行動**：$a_i \in \mathcal{A}$
+- **状態遷移確率**：$p(s_{t+1} | s_t, a_t)$
+- **コスト**：$c(s_t, a_t)$
+:::
+
+:::{note} 解と最適解
 
 - **解**：初期状態から目標状態へ到達するための一連の行動
   - 横浜駅 -> 東京駅 -> 新宿駅 -> 東小金井駅
   - 横浜駅 -> 八王子駅 -> 東小金井駅
 - **最適解**：その中で、総移動時間（コスト）が最も少ない経路
   - 横浜駅 -> 新宿駅 -> 東小金井駅（総コストは55分）
-
 ```{code-cell} python
 :tags: [remove-input]
 draw_network(graph, pos, shortest_path=path)
 ```
+:::
+
+上記の言葉を使って、探索は以下のように定義できる。
+
+:::{note}　探索
+
+**初期状態**から**目標状態**へ到達するための一連の**行動**を見つける作業
+
+:::
+
+### 問題例：8パズル
+
+```{figure} ./images/8-puzzle.svg
+:width: 300px
+:align: center
+:alt: 8-puzzle
+:label: 8-puzzle
+
+8パズルの例。初期状態が与えられ、数字のついたコマをスライドさせて目標状態に到達するゲーム。
+```
+
+### 問題例：迷路
+
+```{figure} https://upload.wikimedia.org/wikipedia/commons/8/88/Maze_simple.svg
+:width: 300px
+:align: center
+:alt: maze
+:label: maze
+
+迷路の例。スタート地点（初期状態）からゴール地点（目標状態）までの経路を見つけるゲーム。
+
+Image by Jkwchui / CC0 1.0 (Public Domain)
+```
+
 
 ## 最短経路問題
 
-頂点と辺で構成される構造を**グラフ**と呼ぶ。グラフ上、ある二つの頂点間を最短で結ぶ経路を求める問題は、**最短経路問題**と呼ばれる。
+🤔では、どうやって探索するのか？
+
+ここでは抽象化した例で説明を進める。
+
+````{prf:example}
+:nonumber:
+
+今、初期状態Aから、目標状態Eへ到達するための経路を探索する問題を考える。
+
+```{code-cell} python
+:tags: [remove-input]
+# Create a graph with nodes and edges
+G = nx.Graph()
+G.add_nodes_from(["A", "B", "C", "D", "E"])
+G.add_edge("A", "B", weight=4)
+G.add_edge("A", "D", weight=2)
+G.add_edge("B", "C", weight=4)
+G.add_edge("B", "D", weight=1)
+G.add_edge("C", "E", weight=3)
+G.add_edge("D", "E", weight=9)
+
+# Create a list of edges in the shortest path
+path_edges = list(zip(path, path[1:]))
+
+node_color = "lightblue"  # Color for nodes
+edge_color ="lightgray"  # Color for edges
+
+# Visualize the graph
+pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
+nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
+nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
+nx.draw_networkx_labels(G, pos)
+nx.draw_networkx_edge_labels(
+    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
+)
+
+plt.show()
+```
+````
+
+グラフ
+: 頂点と辺で構成される構造。
+
+最短経路問題
+: ある二つの頂点間を最短で結ぶ経路を求める問題。
 
 次の図に示すように、グラフには小規模なものもあれば、非常に多くの頂点や辺をもつ大規模なものもある。小規模な問題であれば、手作業で最短経路を見つけることも可能であるが、グラフの規模が大きくなると、手作業では解決が難しくなる。
 
@@ -292,7 +395,9 @@ flowchart LR
 
 ## 探索アルゴリズム
 
-アルゴリズムを紹介するために、以下のグラフにおけるAからEへの最短経路を求める問題を考える。
+最も単純なアルゴリズムは、全ての可能な経路を**系統的**列挙し、その中から最短のものを選ぶ方法である。
+
+ここでは、**探索木**（search tree）を使用し、経路を探索する方法を紹介する。
 
 ```{code-cell} python
 :tags: [remove-input]
@@ -324,17 +429,11 @@ nx.draw_networkx_edge_labels(
 plt.show()
 ```
 
-最も単純なアルゴリズムは、に全ての可能な経路を**系統的**列挙し、その中から最短のものを選ぶ方法である。
-
-### 探索木を用いた経路探索
-
-ここでは、**探索木**（search tree）を使用し、経路を探索する方法を紹介する。
-
 **Step 1:** 
 
 初期状態Aから探索を開始する。
 
-頂点Aを展開し、Aから到達可能な頂点はBとDである。
+Aを展開し、BとDを得る。
 
 ```{code-cell} python
 :tags: [remove-input]
@@ -377,21 +476,17 @@ flowchart TD
     id1 -- 2 --> id3[D]
 ```
 
-ここで、どの順番で頂点を探索していくかを決める必要がある。そのための指針として、以下のようなルールを定める。
+次に、どの順番で頂点を探索していくかを決める必要がある。
 
-- **ルール1**：探索木の同じ深さにある頂点は、左から順に探索する。すべてのノードを探索し終えたら、次の深さの探索に進む。
+以下のようなルールを定める。
+
+- **ルール1**：同じレベルの頂点を全て探索してから、次のレベルの頂点を探索する。
 
 **Step 2:** 
 
-次に、Bを展開する。
-
-Bから到達可能な頂点はA、C、Dである。
+次に、Bを展開し、A、C、Dを得る。
 
 ただし、再びAへ戻るような経路 (A, B, A)は、ループとなり、最適な経路ではないので、探索する必要はない。
-
-そのため、以下のルールを追加する。
-
-- **ルール2**：(A, B, A)、(A, D, A)のようなすでに通過した頂点に再び戻るような経路（ループ）は、探索の対象から除外する。
 
 ```{code-cell} python
 :tags: [remove-input]
@@ -428,7 +523,9 @@ nx.draw_networkx_edge_labels(
 plt.show()
 ```
 
-このルールにより、Aは除外され、CとDのみが新たな探索対象となる。
+そのため、以下のルールを追加する。
+
+- **ルール2**：(A, B, A)、(A, D, A)のようなすでに通過した頂点に再び戻るような経路（ループ）は、探索の対象から除外する。
 
 探索木を更新すると、以下のようになる。
 
@@ -442,9 +539,7 @@ flowchart TD
 
 **Step 3:**
 
-ルール1に従い、次にDを展開する。
-
-Dから到達可能な頂点はB、Eである。
+ルール1に従い、Dを展開し、BとEを得る。
 
 ```{code-cell} python
 :tags: [remove-input]
@@ -606,10 +701,10 @@ plt.show()
 :label: bfs
 :nonumber:
 1. 初期状態から到達可能な頂点を列挙する。
-2. 幅優先で探索を行う。
-   - ルール1に従い、深さの浅い頂点から順に探索する。同じ深さにある頂点は、左から順に探索する。
-   - ルール2に従い、すでに通過した頂点に再び戻るような経路（ループ）は、探索の対象から除外する。
-   - 目標状態に到達した場合、その経路を一つの解として記録する。
+2. 幅優先の順番で、頂点を展開し、隣接する頂点を列挙する。
+   - すでに探索済みの頂点は除外する。
+   - 目標状態に到達した場合、その経路を解として返す。
+   - 目標状態に到達していない場合、探索木に追加する。
 3. 探索が終わるまで、手順2を繰り返す。
 4. 得られた解の中から、コストが最も小さいものを選ぶ。
 :::
@@ -618,17 +713,146 @@ plt.show()
 深さ優先探索（Depth-First Search, DFS）は、幅優先探索と同様に、探索木を用いて経路を探索するアルゴリズムであるが、探索の順序が異なる。名前の通り、深さ優先で探索を行う。
 :::
 
-### アルゴリズムの評価
+### 計算例：8パズル
 
-- 完全性：解が存在する場合に、必ずその解を見つけられるかどうか
-- 最適性：見つかった解が最適解であるかどうか
-- 計算量：探索にかかる時間や空間の複雑さ
+```{figure} ./images/8-puzzle-bfs.svg
+:width: 300px
+:align: center
+:alt: 8-puzzle-bfs
+:label: 8-puzzle-bfs
 
-### 💡アルゴリズムの改善
+8パズルの幅優先探索の例。最短で2手で目標状態に到達する。
+```
 
-**最良優先探索**や**ダイクストラ法**などのアルゴリズムは、探索の効率を改善するために、以下のような工夫を行う。
+### 計算時間
 
-- 何らかの規則を用いて、次に探索する最も望ましいノードを選択する
+| 項目               | 値                               |
+| ------------------ | -------------------------------- |
+| 各頂点の隣接頂点数 | 10                               |
+| 探索木の深さ       | 14                               |
+| 計算能力           | 1秒あたり100万個の頂点を探索可能 |
+| メモリ             | 無限大                           |
+| 計算時間           | 約3.5年                          |
+
+### アルゴリズムの改善
+
+🤔より効率的なアルゴリズムは？
+
+**最良優先探索**、**ダイクストラ法**、**分枝限定法**などのアルゴリズムは、以下のような工夫を行う。
+
+- 幅優先で探索するのではなく、何らかの規則を用いて、次に探索する最も望ましいノードを選択する
   - 例えば、コストが最小のノードを選ぶ
 - 探索しなくてもよいノードを除外する
+  - 例えば、明らかに最適解ではないノードを探索しない
 
+## プログラミング
+
+上記のアルゴリズムを実装するのは難しそうだが、実は以下のように簡単に実装できる。
+
+```python
+from collections import deque
+
+
+def bfs(graph, start, goal):
+    queue = deque([(start, [start])])
+    visited = set()
+
+    while queue:
+        current_node, path = queue.popleft()
+
+        if current_node == goal:
+            return path
+
+        if current_node not in visited:
+            visited.add(current_node)
+            for neighbor in graph.get(current_node, []):
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+    return None
+```
+
+この資料に載せているほとんどの図は、プログラムで自動生成している。
+
+
+## 実社会での応用例
+
+### 例1：配送計画問題
+
+````{figure} https://upload.wikimedia.org/wikipedia/commons/8/8b/Illustration_of_the_Vehicle_Routing_Problem.svg
+:width: 300px
+:align: center
+:alt: vehicle-routing-problem
+:label: vehicle-routing-problem
+
+配送計画問題の例。配送センターから出発する複数のトラックが、各配送先へ荷物を届けるための最適なルートを探索する問題。Image by Zootos / CC BY-SA 4.0
+````
+
+### 例2：組立工程のレイアウト最適化
+
+````{figure} https://ars.els-cdn.com/content/image/1-s2.0-S0952197625005305-gr1_lrg.jpg
+:width: 300px
+:align: center
+:alt: layout
+:label: layout
+
+組立工程のレイアウト最適化の例。各工程を効率的に配置するための最適な順序を探索する。Image by Kawabe et al. (2025) / CC BY-NC-ND 4.0
+````
+
+### 例3：超大規模集積回路（VLSI）のレイアウト設計
+
+```{figure} https://upload.wikimedia.org/wikipedia/commons/4/4e/Diopsis.jpg
+:width: 300px
+:align: center
+:alt: vlsi-layout
+:label: vlsi-layout
+
+VLSIのダイ。VLSIは数万個の論理ゲートで構成される。VLSIのレイアウト設計最適化は、非常に難しい問題である。Image by J. M. C. Pereira / CC BY-SA 4.0
+```
+
+:::{important} Takeaway（学び） 
+- 探索は、初期状態から目標状態へ到達するための一連の行動を見つける作業である。
+- 系統的に探索を行うことで、手作業で簡単な**最短経路問題**や**迷路問題**を解決できる。
+- 複雑な問題を解くには、**コンピュータ**と**プログラミング**が不可欠
+- プログラムの設計図が**アルゴリズム**
+:::
+
+### 例4：AlphaGo
+
+[AlphaGo](https://ja.wikipedia.org/wiki/AlphaGo)は、囲碁の最適な手を探索するために、深層学習と[モンテカルロ木探索](https://ja.wikipedia.org/wiki/モンテカルロ木探索)を組み合わせたアルゴリズムを使用している。世界トップ棋士である柯潔に勝利したことを機に、AlphaGoを人間との対局から引退させると発表した。
+
+## 🔍もっと知りたい人へ
+
+Wikipediaの内容は難しいので、以下の内容をカバーしている書籍を読むことをおすすめする。
+
+- [グラフ理論](https://ja.wikipedia.org/wiki/グラフ理論)
+- [最短経路問題](https://ja.wikipedia.org/wiki/最短経路問題)
+- [巡回セールスマン問題](https://ja.wikipedia.org/wiki/巡回セールスマン問題)
+- [力まかせ探索](https://ja.wikipedia.org/wiki/組合せ最適化)
+- [分枝限定法](https://ja.wikipedia.org/wiki/分枝限定法)
+- [ダイクストラ法](https://ja.wikipedia.org/wiki/ダイクストラ法)
+
+## 経営システム工学って何？
+
+> 数理科学で社会の諸問題を解決
+> : 社会の様々な分野における意思決定やマネジメント全般の問題に対して、数学や統計学、計算機科学など、数理科学を基礎として解決をはかる立場を「経営システム工学」と呼びます。
+> 
+> -- [法政大学 経営システム工学科](https://ise-hp.ws.hosei.ac.jp/study/)
+
+- 研究対象：社会の様々な分野における意思決定やマネジメント全般の問題
+  - 例：生産システム、物流システム、交通システム、経済、金融など
+  - 経営システムを含む、さまざまな社会システムの設計、分析、改善
+- 研究手法：数学や統計学、計算機科学など
+  - 例：最適化、シミュレーション、モデリング、データ分析、機械学習など
+
+経営システム工学科の研究室は以下のような研究テーマを扱っている。詳細は[こちら](https://ise-hp.ws.hosei.ac.jp/research/)から。
+
+- データサイエンス
+- 人工知能・機械学習
+- 数理最適化
+- アルゴリズム
+- モデリング
+- 経済
+- 金融
+- 応用代数
+- など
