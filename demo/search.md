@@ -26,11 +26,6 @@ kernelspec:
 
 !pip install networkx
 !pip install matplotlib
-
-import matplotlib.font_manager as fm
-
-fonts = fm.findSystemFonts()
-print([[str(font), fm.FontProperties(fname=font).get_name()] for font in fonts[:50]])
 ```
 
 ```{code-cell} python
@@ -38,15 +33,10 @@ print([[str(font), fm.FontProperties(fname=font).get_name()] for font in fonts[:
 
 import networkx as nx
 import matplotlib.pyplot as plt
-from matplotlib import font_manager
 from typing import Dict, Tuple, List, Optional
 
-
-font_path = "font/NotoSansJP-Regular.ttf"
-jp_font = font_manager.FontProperties(fname=font_path)
-
 # enable Japanese characters in matplotlib
-plt.rcParams["font.family"] = jp_font.get_name()
+plt.rcParams["font.family"] = "Hiragino Sans"
 
 # === Data Definitions ===
 
