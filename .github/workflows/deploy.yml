@@ -37,6 +37,11 @@ jobs:
           node-version: 18.x
       - name: Install Jupyter Book (via myst)
         run: pip install "jupyter-book>=2.0.0a0"
+      # install japanese fonts for matplotlib
+      - name: Install Japanese Fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk fonts-vlgothic
       - name: Build HTML Assets
         run: jupyter book build --execute --html 
       - name: Upload artifact

@@ -21,39 +21,22 @@ kernelspec:
 田中さんは、法政大学のオープンキャンパスに参加するため、横浜駅から東小金井駅まで、「横浜駅」から「東小金井駅」までできるだけ早く行きたいと思っている。
 
 下の図は、電車路線を単純化したものである。頂点は駅、線は駅と駅を結ぶ線路を表し、数値は、所要時間（分）を表す。
-:tags: [remove-input, remove-output]
-```{code-cell} python
 
+```{code-cell} python
+:tags: [remove-input, remove-output]
 !pip install networkx
 !pip install matplotlib
-
-import matplotlib.font_manager as fm
-
-fonts = fm.findSystemFonts()
-
-valid_fonts = []
-for font in fonts:
-    try:
-        name = fm.FontProperties(fname=font).get_name()
-        valid_fonts.append([font, name])
-    except RuntimeError as e:
-        print(f"Skipped: {font} ({e})")
-
-print(valid_fonts[:50])
-
 ```
-:tags: [remove-input]
-```{code-cell} python
 
+```{code-cell} python
+:tags: [remove-input]
 
 import networkx as nx
 import matplotlib.pyplot as plt
 from typing import Dict, Tuple, List, Optional
 
-
-
 # enable Japanese characters in matplotlib
-plt.rcParams["font.family"] = "Hiragino Sans"
+plt.rcParams["font.family"] = "Noto Sans CJK JP"
 
 # === Data Definitions ===
 
