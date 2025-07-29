@@ -28,6 +28,9 @@ kernelspec:
 !pip install matplotlib
 import networkx as nx
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
+font_path = "./font/NotoSansJP-Regular.ttf"
+jp_font = font_manager.FontProperties(fname=font_path)
 ```
 
 ```{code-cell} python
@@ -39,7 +42,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, Tuple, List, Optional
 
 # enable Japanese characters in matplotlib
-plt.rcParams["font.family"] = "Noto Sans CJK JP"
+plt.rcParams["font.family"] = jp_font.get_name()
 
 # === Data Definitions ===
 
