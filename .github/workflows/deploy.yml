@@ -38,7 +38,7 @@ jobs:
       - name: Install Jupyter Book (via myst)
         run: pip install "jupyter-book>=2.0.0a0"
       - name: Build HTML Assets
-        run: jupyter book build --html
+        run: jupyter book build --html --execute
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
