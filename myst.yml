@@ -5,7 +5,19 @@ project:
   # title:
   # description:
   # keywords: []
-  # authors: []
+  authors: 
+    - name: 劉 子昂
+      affiliations:
+        - id: hu
+          name: 法政大学 
+          department: 理工学部 経営システム工学科
+          # isni: 0000 0004 1762 1436
+          # ror: 00bx6dj65
+          # postal_code: 184-8584
+      email: liu@hosei.ac.jp
+      github: zi-ang-liu
+      url: "https://zi-ang-liu.github.io"
+      orcid: 0000-0002-1364-3502
   # github:
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
   toc:
