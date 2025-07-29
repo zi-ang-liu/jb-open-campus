@@ -27,11 +27,19 @@ kernelspec:
 !pip install networkx
 !pip install matplotlib
 
-# print supported japanese fonts for matplotlib this will be updated to github through the action
 import matplotlib.font_manager as fm
 
 fonts = fm.findSystemFonts()
-print([[str(font), fm.FontProperties(fname=font).get_name()] for font in fonts[:50]])
+
+valid_fonts = []
+for font in fonts:
+    try:
+        name = fm.FontProperties(fname=font).get_name()
+        valid_fonts.append([font, name])
+    except RuntimeError as e:
+        print(f"Skipped: {font} ({e})")
+
+print(valid_fonts[:50])
 
 ```
 :tags: [remove-input]
