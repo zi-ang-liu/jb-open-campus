@@ -27,9 +27,9 @@ kernelspec:
 !pip install networkx
 !pip install matplotlib
 ```
-
-```{code-cell} python
 :tags: [remove-input]
+```{code-cell} python
+
 
 import networkx as nx
 import matplotlib.pyplot as plt
