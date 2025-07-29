@@ -26,6 +26,11 @@ kernelspec:
 :tags: [remove-input, remove-output]
 !pip install networkx
 !pip install matplotlib
+
+import matplotlib.font_manager as fm
+
+fonts = fm.findSystemFonts()
+print([[str(font), fm.FontProperties(fname=font).get_name()] for font in fonts[:10]])
 ```
 
 ```{code-cell} python
@@ -35,6 +40,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from typing import Dict, Tuple, List, Optional
+
 
 font_path = "font/NotoSansJP-Regular.ttf"
 jp_font = font_manager.FontProperties(fname=font_path)
