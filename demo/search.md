@@ -39,7 +39,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, Tuple, List, Optional
 
 # enable Japanese characters in matplotlib
-plt.rcParams["font.family"] = "Arial Unicode MS"
+plt.rcParams["font.family"] = "Noto Sans CJK JP"
 
 # === Data Definitions ===
 
