@@ -8,7 +8,7 @@ kernelspec:
 
 :::{important} 学習目標 
 - コンピュータがどのようにして「問題を解く」のか、その考え方を知る
-- アルゴリズムの基本的な考え方を理解する
+- 探索問題の基本的な考え方を理解する
 - 探索アルゴリズムが、いろいろな現実の問題にも役立つことを知る
 :::
 
@@ -503,12 +503,6 @@ flowchart TD
     id1 -- 2 --> id3[D]
 ```
 
-次に、どの順番で頂点を探索していくかを決める必要がある。
-
-以下のようなルールを定める。
-
-- **ルール1**：同じレベルの頂点を全て探索してから、次のレベルの頂点を探索する。
-
 **Step 2:** 
 
 次に、Bを展開し、A、C、Dを得る。
@@ -550,9 +544,9 @@ nx.draw_networkx_edge_labels(
 plt.show()
 ```
 
-そのため、以下のルールを追加する。
+そのため、以下のルールを定義する。
 
-- **ルール2**：(A, B, A)、(A, D, A)のようなすでに通過した頂点に再び戻るような経路（ループ）は、探索の対象から除外する。
+- **ルール1**：(A, B, A)、(A, D, A)のようなすでに通過した頂点に再び戻るような経路（ループ）は、探索の対象から除外する。
 
 探索木を更新すると、以下のようになる。
 
@@ -563,6 +557,12 @@ flowchart TD
     id2[B] -- 4 --> id4[C]
     id2[B] -- 1 --> id5[D]
 ```
+
+次に、どの順番で頂点を探索していくかを決める必要がある。
+
+以下のようなルールを定める。
+
+- **ルール2**：同じレベルの頂点を全て探索してから、次のレベルの頂点を探索する。
 
 **Step 3:**
 
@@ -837,6 +837,23 @@ def bfs(graph, start, goal):
 VLSIのダイ。VLSIは数万個の論理ゲートで構成される。VLSIのレイアウト設計最適化は、非常に難しい問題である。Image by J. M. C. Pereira / CC BY-SA 4.0
 ```
 
+### 例4：AlphaGo
+
+[AlphaGo](https://ja.wikipedia.org/wiki/AlphaGo)は、囲碁の最適な手を探索するために、深層学習と[モンテカルロ木探索](https://ja.wikipedia.org/wiki/モンテカルロ木探索)を組み合わせたアルゴリズムを使用している。世界トップ棋士である柯潔に勝利したことを機に、AlphaGoを人間との対局から引退させると発表した。
+
+```{figure} https://upload.wikimedia.org/wikipedia/commons/a/a6/MCTS_Algorithm.png
+:width: 300px
+:align: center
+:alt: mcts
+:label: mcts
+
+モンテカルロ木探索の例。Image by Robert Moss / CC BY-SA 4.0
+```
+
+:::{note}
+探索アルゴリズムは、現在のAI技術の基礎となるものであり、様々な分野で応用されている。
+:::
+
 :::{important} Takeaway（学び） 
 - 探索は、初期状態から目標状態へ到達するための一連の行動を見つける作業である。
 - 系統的に探索を行うことで、手作業で簡単な**最短経路問題**や**迷路問題**を解決できる。
@@ -844,18 +861,19 @@ VLSIのダイ。VLSIは数万個の論理ゲートで構成される。VLSIの�
 - プログラムの設計図が**アルゴリズム**
 :::
 
-### 例4：AlphaGo
-
-[AlphaGo](https://ja.wikipedia.org/wiki/AlphaGo)は、囲碁の最適な手を探索するために、深層学習と[モンテカルロ木探索](https://ja.wikipedia.org/wiki/モンテカルロ木探索)を組み合わせたアルゴリズムを使用している。世界トップ棋士である柯潔に勝利したことを機に、AlphaGoを人間との対局から引退させると発表した。
-
 ## 🔍もっと知りたい人へ
 
-Wikipediaの内容は難しいので、以下の内容をカバーしている書籍を読むことをおすすめする。
+以下のキーワードを使って、さらに深く学ぶことができる。
 
 - [グラフ理論](https://ja.wikipedia.org/wiki/グラフ理論)
+- [ネットワーク理論](https://ja.wikipedia.org/wiki/ネットワーク理論)
 - [最短経路問題](https://ja.wikipedia.org/wiki/最短経路問題)
 - [巡回セールスマン問題](https://ja.wikipedia.org/wiki/巡回セールスマン問題)
+- [配送計画問題](https://ja.wikipedia.org/wiki/配送計画問題)
 - [力まかせ探索](https://ja.wikipedia.org/wiki/組合せ最適化)
+- [幅優先探索](https://ja.wikipedia.org/wiki/幅優先探索)
+- [深さ優先探索](https://ja.wikipedia.org/wiki/深さ優先探索)
+- [最良優先探索](https://ja.wikipedia.org/wiki/最良優先探索)
 - [分枝限定法](https://ja.wikipedia.org/wiki/分枝限定法)
 - [ダイクストラ法](https://ja.wikipedia.org/wiki/ダイクストラ法)
 
