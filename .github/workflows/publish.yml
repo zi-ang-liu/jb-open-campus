@@ -1,0 +1,20 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  # Fired by zi-ang-liu/quarto-lecture-notes when the shared design changes.
+  repository_dispatch:
+    types: [theme-updated]
+  workflow_dispatch:
+
+jobs:
+  book:
+    # Must be granted here: a reusable workflow cannot request more
+    # permission than the calling job holds.
+    permissions:
+      contents: write
+    uses: zi-ang-liu/quarto-lecture-notes/.github/workflows/book.yml@main
+    with:
+      python-version: "3.12"
+      update-extensions: ${{ github.event_name == 'repository_dispatch' }}

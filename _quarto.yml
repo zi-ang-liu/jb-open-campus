@@ -1,0 +1,30 @@
+project:
+  type: book
+
+lang: ja
+brand: _extensions/zi-ang-liu/lecture/_brand.yml
+
+execute:
+  freeze: auto
+  # 図を生成するコードは高校生に見せない．コードそのものが説明の対象で
+  # ある場合は，実行しないコードブロック（```python）で載せる．
+  echo: false
+
+metadata-files:
+  - _extensions/zi-ang-liu/lecture/_book.yml
+
+format:
+  lecture-html: default
+  lecture-pdf: default
+
+book:
+  title: "オープンキャンパス模擬授業"
+  subtitle: "法政大学 理工学部 経営システム工学科"
+  site-url: https://zi-ang-liu.github.io/jb-open-campus/
+  repo-url: https://github.com/zi-ang-liu/jb-open-campus
+
+  # 模擬授業ごとに 1 章．新しい授業は search.qmd の形に合わせて書き，
+  # ここと index.qmd の一覧に追加する．
+  chapters:
+    - index.qmd
+    - search.qmd
