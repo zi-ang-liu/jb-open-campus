@@ -14,8 +14,10 @@ metadata-files:
   - _extensions/zi-ang-liu/lecture/_book.yml
 
 format:
+  # HTML only. A PDF would need pandoc to download the hot-linked Wikimedia
+  # images at render time, and Wikimedia rate-limits that (HTTP 429). To add
+  # lecture-pdf later, copy those images into images/ first.
   lecture-html: default
-  lecture-pdf: default
 
 book:
   title: "オープンキャンパス模擬授業"

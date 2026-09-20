@@ -63,11 +63,12 @@ theme change — `rm -rf .quarto`, then render.
 - **The blockquote in `## 経営システム工学って何？` keeps `、。`.** It is
   verbatim from the department website (CONVENTION §5, quotations); the linter
   skips blockquotes for that reason.
-- **Remote images are hot-linked**, as in the original (Wikimedia, Elsevier).
-  Fine for HTML — the browser fetches them — but `lecture-pdf` needs pandoc to
-  download them at render time, and Wikimedia rate-limits that (HTTP 429). If
-  the PDF matters, copy the images into `images/`; the licences (CC0,
-  CC BY-SA, CC BY-NC-ND) allow it and the captions already credit the authors.
+- **HTML only, because the remote images are hot-linked** as in the original
+  (Wikimedia, Elsevier). Fine for HTML — the browser fetches them — but a PDF
+  needs pandoc to download them at render time, and Wikimedia rate-limits that
+  (HTTP 429), so `_quarto.yml` declares no `lecture-pdf`. To add one, copy the
+  images into `images/` first; the licences (CC0, CC BY-SA, CC BY-NC-ND) allow
+  it and the captions already credit the authors.
 - Python at render time: matplotlib, networkx (`requirements.txt`, same pins as
   or-book). `_freeze/` is committed, so CI executes nothing unless a chapter's
   source changed since its freeze.
