@@ -1,0 +1,15 @@
+{
+  // Render-on-save goes through the Quarto extension, which takes its
+  // QUARTO_PYTHON from whichever interpreter the Python extension has active.
+  // Without this pin it picked up a leftover from the Jupyter Book era
+  // (~/miniconda3/envs/jb, long gone) and then fell back to the system
+  // python3, which has no jupyter — so every save failed on the executed
+  // {python} chunks in search.qmd.
+  //
+  // quarto-book is the env in requirements.txt; it is also the one CLAUDE.md
+  // tells you to pass as QUARTO_PYTHON when rendering from the command line.
+  "python.defaultInterpreterPath": "/opt/miniconda3/envs/quarto-book/bin/python",
+  // Same as the other lecture-note books: these are conda envs, not venvs.
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda"
+}
