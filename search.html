@@ -464,7 +464,7 @@ window.Quarto = {
 <h2 data-number="1.2" class="anchored" data-anchor-id="クイズ"><span class="header-section-number">1.2</span> クイズ</h2>
 <p>田中さんは，法政大学のオープンキャンパスに参加するため，横浜駅から東小金井駅までできるだけ早く行きたいと思っている．</p>
 <p>下の図は，電車路線を単純化したものである．頂点は駅，線は駅と駅を結ぶ線路を表し，数値は，所要時間（分）を表す．</p>
-<div id="2548fb20" class="cell" data-execution_count="1">
+<div id="a93da2e7" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -491,7 +491,7 @@ window.Quarto = {
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="2ce7f1d5" class="cell" data-execution_count="2">
+<div id="ee8ba767" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>答え: 横浜 ➝ 新宿 ➝ 東小金井
 時間: 55 分</code></pre>
@@ -606,7 +606,7 @@ window.Quarto = {
 <li>横浜駅 -&gt; 新宿駅 -&gt; 東小金井駅（総コストは55分）</li>
 </ul></li>
 </ul>
-<div id="eb23bc18" class="cell" data-execution_count="3">
+<div id="caaf1767" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -726,7 +726,7 @@ window.Quarto = {
 <p>🤔では，どうやって探索するのか？</p>
 <p>ここでは抽象化した例で説明を進める．</p>
 <p>今，初期状態Aから，目標状態Eへ到達するための経路を探索する問題を考える．</p>
-<div id="0f0f92e6" class="cell" data-execution_count="4">
+<div id="b65ee56c" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -746,7 +746,7 @@ window.Quarto = {
 </dd>
 </dl>
 <p>次の図に示すように，グラフには小規模なものもあれば，非常に多くの頂点や辺をもつ大規模なものもある．小規模な問題であれば，手作業で最短経路を見つけることも可能であるが，グラフの規模が大きくなると，手作業では解決が難しくなる．</p>
-<div id="7fd88785" class="cell" data-execution_count="5">
+<div id="cea5f645" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -787,7 +787,7 @@ window.Quarto = {
 <h2 data-number="1.7" class="anchored" data-anchor-id="探索アルゴリズム"><span class="header-section-number">1.7</span> 探索アルゴリズム</h2>
 <p>最も単純なアルゴリズムは，全ての可能な経路を<strong>系統的</strong>に列挙し，その中から最短のものを選ぶ方法である．</p>
 <p>ここでは，<strong>探索木</strong>（search tree）を使用し，経路を探索する方法を紹介する．</p>
-<div id="9c5f13c2" class="cell" data-execution_count="6">
+<div id="ee3592ce" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -799,7 +799,7 @@ window.Quarto = {
 <p><strong>Step 1:</strong></p>
 <p>初期状態Aから探索を開始する．</p>
 <p>Aを展開し，BとDを得る．</p>
-<div id="a5dc9905" class="cell" data-execution_count="7">
+<div id="980434f8" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -826,7 +826,7 @@ window.Quarto = {
 <p><strong>Step 2:</strong></p>
 <p>次に，Bを展開し，A，C，Dを得る．</p>
 <p>ただし，再びAへ戻るような経路 (A, B, A)は，ループとなり，最適な経路ではないので，探索する必要はない．</p>
-<div id="bdb35975" class="cell" data-execution_count="8">
+<div id="fa28446b" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -863,7 +863,7 @@ window.Quarto = {
 </ul>
 <p><strong>Step 3:</strong></p>
 <p>ルール1に従い，Dを展開し，BとEを得る．</p>
-<div id="2f424c6a" class="cell" data-execution_count="9">
+<div id="35a32a37" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -906,7 +906,7 @@ window.Quarto = {
 </div>
 <p><strong>Step 4:</strong></p>
 <p>同じ手順を繰り返すと，最終的に以下のような探索木が得られる．</p>
-<div id="b32b518a" class="cell" data-execution_count="10">
+<div id="d1370003" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -965,7 +965,7 @@ window.Quarto = {
 </tbody>
 </table>
 <p>最短経路は，A ➝ D ➝ B ➝ C ➝ Eで，コストは10である．</p>
-<div id="4dc8d40a" class="cell" data-execution_count="11">
+<div id="1d7b230f" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
