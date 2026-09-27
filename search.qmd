@@ -17,124 +17,158 @@
 #| fig-cap: "横浜駅から東小金井駅までの路線図（辺の数値は所要時間［分］）"
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+from matplotlib.lines import Line2D
 import networkx as nx
-from typing import Dict, Tuple, List, Optional
 
-# 図の中の日本語．システムのフォントに頼らず，リポジトリに同梱した
-# Noto Sans JP を登録して使う（CI の Ubuntu でも同じ図になる）．
+# 同梱フォントと共通の配色を使い，表示環境が変わっても読みやすくする．
 fm.fontManager.addfont("fonts/NotoSansJP-Regular.ttf")
-plt.rcParams["font.family"] = "Noto Sans JP"
-
-# === Data Definitions ===
-
-StationCoords = Dict[str, Tuple[float, float]]
-EdgeList = List[Tuple[str, str, int]]
-
-stations: StationCoords = {
-    "東小金井": (35.701549, 139.523898),
-    "新宿": (35.689732, 139.700908),
-    "横浜": (35.466102, 139.622140),
-    "東京": (35.681320, 139.767218),
-    "八王子": (35.655670, 139.338986),
-}
-
-edges: EdgeList = [
-    ("東小金井", "新宿", 22),
-    ("新宿", "横浜", 33),
-    ("横浜", "東京", 26),
-    ("新宿", "東京", 15),
-    ("東小金井", "八王子", 32),
-    ("八王子", "横浜", 50),
-]
-
-# === Utility Functions ===
+FONT = "Noto Sans JP"
+INK = "#203B50"
+BLUE = "#286B91"
+GREEN = "#22796D"
+ACCENT = "#C65032"
+EDGE = "#9EAFBC"
+PALE = "#EDF3F7"
+plt.rcParams.update(
+    {
+        "font.family": FONT,
+        "font.size": 12,
+        "text.color": INK,
+        "axes.labelcolor": INK,
+        "figure.facecolor": "white",
+        "axes.facecolor": "white",
+        "figure.dpi": 150,
+        "savefig.dpi": 180,
+        "savefig.facecolor": "white",
+    }
+)
 
 
-def create_graph(
-    stations: StationCoords, edges: EdgeList, bidirectional: bool = True
-) -> nx.Graph:
-    G = nx.Graph() if bidirectional else nx.DiGraph()
-    G.add_nodes_from(stations.keys())
-    G.add_weighted_edges_from(edges)
-    if bidirectional:
-        reverse_edges = [(v, u, w) for u, v, w in edges]
-        G.add_weighted_edges_from(reverse_edges)
-    return G
-
-
-def get_position_map(stations: StationCoords) -> Dict[str, Tuple[float, float]]:
-    return {name: (lon, lat) for name, (lat, lon) in stations.items()}
-
-
-def compute_shortest_path(
-    G: nx.Graph, source: str, target: str
-) -> Tuple[List[str], int]:
-    path = nx.shortest_path(G, source=source, target=target, weight="weight")
-    time = nx.shortest_path_length(G, source=source, target=target, weight="weight")
-    return path, time
-
-
-def draw_network(
-    G: nx.Graph,
-    pos: Dict[str, Tuple[float, float]],
-    shortest_path: Optional[List[str]] = None,
-) -> None:
-    plt.figure(figsize=(8, 4))
-
-    # === Draw base nodes and edges ===
-    nx.draw_networkx_nodes(G, pos, node_size=80, node_color="#1f78b4", alpha=0.8)
-    nx.draw_networkx_edges(G, pos, edge_color="lightgray", width=2)
-
-    # === Highlight shortest path ===
-    if shortest_path and len(shortest_path) > 1:
-        path_edges = list(zip(shortest_path[:-1], shortest_path[1:]))
-        nx.draw_networkx_edges(
-            G, pos, edgelist=path_edges, edge_color="crimson", width=3, alpha=0.9
+def edge_labels(G, pos, ax, highlighted=(), unit=""):
+    """重みを水平に表示し，白い背景で辺との重なりを避ける．"""
+    selected = {frozenset(edge) for edge in highlighted}
+    for u, v, weight in G.edges(data="weight"):
+        active = frozenset((u, v)) in selected
+        nx.draw_networkx_edge_labels(
+            G,
+            pos,
+            ax=ax,
+            edge_labels={(u, v): f"{weight}{unit}"},
+            font_family=FONT,
+            font_size=12,
+            rotate=False,
+            font_color=ACCENT if active else INK,
+            bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="none"),
         )
+
+
+source, target = "横浜", "東小金井"
+# 駅の位置は見やすさを優先した模式図（地理的な縮尺ではない）．
+station_pos = {
+    "八王子": (0, 1.0),
+    "東小金井": (1.5, 2.1),
+    "新宿": (3.7, 2.1),
+    "東京": (5.8, 1.0),
+    "横浜": (3.7, 0),
+}
+graph = nx.Graph()
+graph.add_weighted_edges_from(
+    [
+        ("東小金井", "新宿", 22),
+        ("新宿", "横浜", 33),
+        ("横浜", "東京", 26),
+        ("新宿", "東京", 15),
+        ("東小金井", "八王子", 32),
+        ("八王子", "横浜", 50),
+    ]
+)
+
+
+def compute_shortest_path(G, source, target):
+    route = nx.shortest_path(G, source, target, weight="weight")
+    cost = nx.path_weight(G, route, weight="weight")
+    return route, cost
+
+
+def draw_network(G, pos, shortest_path=None):
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    fig.subplots_adjust(left=0.06, right=0.96, top=0.78, bottom=0.20)
+    route_edges = list(zip(shortest_path, shortest_path[1:])) if shortest_path else []
+    nx.draw_networkx_edges(G, pos, ax=ax, edge_color=EDGE, width=2.5)
+    if route_edges:
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            ax=ax,
+            edgelist=route_edges,
+            edge_color=ACCENT,
+            width=4,
+            arrows=True,
+            arrowstyle="-|>",
+            arrowsize=22,
+            node_size=420,
+        )
+    for station in G:
+        color = BLUE if station == source else GREEN if station == target else "white"
         nx.draw_networkx_nodes(
             G,
             pos,
-            nodelist=shortest_path,
-            node_color="crimson",
-            node_size=100,
-            alpha=0.9,
+            ax=ax,
+            nodelist=[station],
+            node_size=300,
+            node_shape="s" if station == source else "o",
+            node_color=color,
+            edgecolors=INK if color == "white" else color,
+            linewidths=2,
         )
-
-    # === Labels for nodes ===
-    for station, (x, y) in pos.items():
-        offset = 0.01 if station != "横浜" else -0.01
-        va = "bottom" if station != "横浜" else "top"
-        plt.text(
-            x,
-            y + offset,
-            station,
-            fontsize=12,
+        x, y = pos[station]
+        label = (
+            "出発駅：" if station == source else "到着駅：" if station == target else ""
+        ) + station
+        below = station == source
+        ax.annotate(
+            label,
+            (x, y),
+            xytext=(0, -19 if below else 17),
+            textcoords="offset points",
             ha="center",
-            va=va,
-            bbox=dict(
-                facecolor="white", edgecolor="gray", boxstyle="round,pad=0.3", alpha=0.9
-            ),
+            va="top" if below else "bottom",
+            fontsize=12,
+            color=BLUE if station == source else GREEN if station == target else INK,
+            fontweight="bold",
         )
-
-    # === Edge labels (travel time) ===
-    edge_labels = {(u, v): f"{d} min" for u, v, d in G.edges(data="weight")}
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
-
-    # === Decorations ===
-    # without 枠
-    plt.axis("off")
-    plt.tight_layout()
+    edge_labels(G, pos, ax, route_edges, "分")
+    if shortest_path:
+        total = nx.path_weight(G, shortest_path, weight="weight")
+        note = " → ".join(shortest_path) + f"    所要時間：{total}分"
+        ax.text(
+            0.5,
+            -0.23,
+            note,
+            transform=ax.transAxes,
+            ha="center",
+            fontsize=12,
+            color=ACCENT,
+            fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.6", fc="#FCF0EB", ec="none"),
+        )
+    else:
+        ax.text(
+            0.5,
+            -0.23,
+            "所要時間が最も短いのは，どの経路だろうか？",
+            transform=ax.transAxes,
+            ha="center",
+            fontsize=12,
+            color=BLUE,
+        )
+    ax.set_xlim(-0.65, 6.45)
+    ax.set_ylim(-0.4, 2.65)
+    ax.axis("off")
     plt.show()
 
 
-# Define source/target and execute
-source = "横浜"
-target = "東小金井"
-
-graph = create_graph(stations, edges)
-pos = get_position_map(stations)
-
-draw_network(graph, pos)
+draw_network(graph, station_pos)
 ```
 
 横浜駅から東小金井駅まで，最短で到達するための経路はどれか？
@@ -149,11 +183,8 @@ draw_network(graph, pos)
 ```{python}
 #| label: fig-rail-shortest-answer
 #| fig-cap: "横浜駅から東小金井駅までの最短経路（所要時間55分）"
-# shortest path
 path, time = compute_shortest_path(graph, source, target)
-print("答え:", " ➝ ".join(path))
-print("時間:", time, "分")
-draw_network(graph, pos, shortest_path=path)
+draw_network(graph, station_pos, shortest_path=path)
 ```
 :::
 
@@ -218,7 +249,7 @@ flowchart TD
 ```{python}
 #| label: fig-rail-optimal-solution
 #| fig-cap: "最適解の例：横浜駅から新宿駅を経由して東小金井駅へ向かう経路"
-draw_network(graph, pos, shortest_path=path)
+draw_network(graph, station_pos, shortest_path=path)
 ```
 :::
 
@@ -232,7 +263,66 @@ draw_network(graph, pos, shortest_path=path)
 
 ### 問題例：8パズル
 
-![8パズルの例．初期状態が与えられ，数字のついたコマをスライドさせて目標状態に到達するゲーム．](images/8-puzzle.svg){#fig-8-puzzle width=300px fig-alt="8パズル"}
+```{python}
+#| label: fig-8-puzzle
+#| fig-cap: "8パズルの例．空いているマスに隣接するコマを動かし，初期状態から目標状態への到達を目指す．"
+#| fig-alt: "8パズルの初期状態と目標状態"
+from matplotlib.patches import Rectangle
+from collections import deque
+
+# 0は空いているマスを表す．元の図と同じ配置を使う．
+puzzle_initial = (7, 2, 4, 5, 0, 6, 8, 3, 1)
+puzzle_goal = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+
+
+def draw_puzzle_board(ax, state, center, *, size=3, moved_tile=None,
+                      outline=EDGE, font_size=17):
+    x, y = center
+    cell = size / 3
+    left, bottom = x - size / 2, y - size / 2
+    for index, tile in enumerate(state):
+        row, col = divmod(index, 3)
+        tx, ty = left + col * cell, bottom + (2 - row) * cell
+        fill = "#DCE5EB" if tile == 0 else "#FCE6DC" if tile == moved_tile else PALE
+        ax.add_patch(Rectangle((tx, ty), cell, cell,
+                               facecolor=fill, edgecolor="white", linewidth=2))
+        if tile:
+            ax.text(tx + cell / 2, ty + cell / 2, str(tile),
+                    ha="center", va="center", fontsize=font_size,
+                    color=ACCENT if tile == moved_tile else INK)
+    ax.add_patch(Rectangle((left, bottom), size, size,
+                           fill=False, edgecolor=outline, linewidth=2))
+
+
+def puzzle_moves(state):
+    """空きマスの上下左右にあるコマを動かし，次の状態とコマの番号を返す．"""
+    blank = state.index(0)
+    row, col = divmod(blank, 3)
+    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        nr, nc = row + dr, col + dc
+        if 0 <= nr < 3 and 0 <= nc < 3:
+            neighbor = 3 * nr + nc
+            tile = state[neighbor]
+            child = list(state)
+            child[blank], child[neighbor] = child[neighbor], child[blank]
+            yield tuple(child), tile
+
+
+fig, ax = plt.subplots(figsize=(8.4, 3.7))
+draw_puzzle_board(ax, puzzle_initial, (0, 0), outline=BLUE)
+draw_puzzle_board(ax, puzzle_goal, (6, 0), outline=GREEN)
+ax.text(0, 1.9, "初期状態", ha="center", fontsize=14, color=BLUE)
+ax.text(6, 1.9, "目標状態", ha="center", fontsize=14, color=GREEN)
+ax.annotate("", xy=(4.1, 0), xytext=(1.9, 0),
+            arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=2, mutation_scale=18))
+ax.text(3, 0.4, "移動を繰り返す", ha="center", fontsize=11)
+ax.text(3, -2.2, "空いているマスに隣接するコマを1枚ずつ動かす．",
+        ha="center", fontsize=11)
+ax.set(xlim=(-2, 8), ylim=(-2.5, 2.4), aspect="equal")
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
 
 ::: {.callout-note}
 ### 数学モデル
@@ -283,32 +373,136 @@ draw_network(graph, pos, shortest_path=path)
 ```{python}
 #| label: fig-weighted-graph
 #| fig-cap: "初期状態Aから目標状態Eへの最短経路を求める重み付きグラフ"
-# Create a graph with nodes and edges
+# 全ての探索ステップで同じグラフ・座標・縮尺を使う．
 G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# Create a list of edges in the shortest path
-path_edges = list(zip(path, path[1:]))
-
-node_color = "lightblue"  # Color for nodes
-edge_color ="lightgray"  # Color for edges
-
-# Visualize the graph
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
+G.add_weighted_edges_from(
+    [
+        ("A", "B", 4),
+        ("A", "D", 2),
+        ("B", "C", 4),
+        ("B", "D", 1),
+        ("C", "E", 3),
+        ("D", "E", 9),
+    ]
 )
+search_pos = {
+    "A": (0, 0),
+    "B": (1.8, 1),
+    "D": (1.8, -1),
+    "C": (3.6, 1),
+    "E": (5.4, 0),
+}
 
-plt.show()
+
+def draw_search_graph(*, current=None, candidates=(), route=None, note=None):
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    fig.subplots_adjust(left=0.06, right=0.96, top=0.76, bottom=0.24)
+    route_edges = list(zip(route, route[1:])) if route else []
+    active_edges = route_edges or [(current, neighbor) for neighbor in candidates]
+    nx.draw_networkx_edges(G, search_pos, ax=ax, edge_color=EDGE, width=2.2)
+    if active_edges:
+        nx.draw_networkx_edges(
+            G,
+            search_pos,
+            ax=ax,
+            edgelist=active_edges,
+            edge_color=ACCENT,
+            width=3.5,
+            arrows=True,
+            arrowstyle="-|>",
+            arrowsize=24,
+            node_size=1100,
+        )
+    for node in G:
+        color = (
+            ACCENT
+            if node == current
+            else BLUE if node == "A" else GREEN if node == "E" else PALE
+        )
+        nx.draw_networkx_nodes(
+            G,
+            search_pos,
+            ax=ax,
+            nodelist=[node],
+            node_size=1100,
+            node_color=color,
+            edgecolors=color if color != PALE else EDGE,
+            linewidths=1.8,
+        )
+        nx.draw_networkx_labels(
+            G,
+            search_pos,
+            ax=ax,
+            labels={node: node},
+            font_family=FONT,
+            font_size=17,
+            font_weight="bold",
+            font_color=INK if color == PALE else "white",
+        )
+    for node, label, color in [("A", "初期状態", BLUE), ("E", "目標状態", GREEN)]:
+        ax.annotate(
+            label,
+            search_pos[node],
+            xytext=(0, -30),
+            textcoords="offset points",
+            ha="center",
+            va="top",
+            fontsize=10,
+            color=color,
+        )
+    edge_labels(G, search_pos, ax, active_edges)
+    if current:
+        handles = [
+            Line2D(
+                [],
+                [],
+                marker="o",
+                linestyle="none",
+                color=ACCENT,
+                markersize=9,
+                label="展開中の頂点",
+            ),
+            Line2D(
+                [],
+                [],
+                color=ACCENT,
+                linewidth=3,
+                marker=">",
+                markevery=[1],
+                label="移動先の候補",
+            ),
+        ]
+        ax.legend(
+            handles=handles,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.04),
+            ncol=2,
+            frameon=False,
+            fontsize=10,
+        )
+    if route:
+        total = nx.path_weight(G, route, weight="weight")
+        note = " → ".join(route) + f"    コストの合計：{total}"
+    if note:
+        ax.text(
+            0.5,
+            -0.28,
+            note,
+            transform=ax.transAxes,
+            ha="center",
+            fontsize=11,
+            color=ACCENT if route else INK,
+            bbox=dict(
+                boxstyle="round,pad=0.55", fc="#FCF0EB" if route else PALE, ec="none"
+            ),
+        )
+    ax.set_xlim(-0.65, 6.05)
+    ax.set_ylim(-1.5, 1.55)
+    ax.axis("off")
+    plt.show()
+
+
+draw_search_graph(note="コストの合計が最も小さくなる経路はどれか？")
 ```
 
 グラフ
@@ -321,79 +515,28 @@ plt.show()
 
 ```{python}
 #| label: fig-graph-scales
-#| fig-cap: "規模の異なるグラフの例（左から頂点数5，10，20）"
-import matplotlib.pyplot as plt
-import networkx as nx
-import random
-
-# 辺の重みは乱数．描画のたびに図が変わらないよう，種を固定する．
-random.seed(0)
-
-# Generate graphs of different scales
-G_small = nx.gnm_random_graph(5, 10, seed=0, directed=False)
-G_medium = nx.gnm_random_graph(10, 15, seed=1, directed=False)
-G_large = nx.gnm_random_graph(20, 25, seed=5, directed=False)
-
-# Assign random weights to edges
-for G in [G_small, G_medium, G_large]:
-    for u, v in G.edges():
-        G[u][v]["weight"] = round(random.uniform(1, 10), 1)
-
-# Compute layouts
-pos_small = nx.spring_layout(G_small, seed=1)
-pos_medium = nx.spring_layout(G_medium, seed=2)
-pos_large = nx.spring_layout(G_large, seed=3)
-
-# Plot the graphs
-fig, axs = plt.subplots(1, 3, figsize=(18, 6))
-
-# Small graph
-nx.draw(G_small, pos_small, with_labels=True, ax=axs[0], node_color="lightblue")
-nx.draw_networkx_edge_labels(
-    G_small,
-    pos_small,
-    edge_labels={(u, v): G_small[u][v]["weight"] for u, v in G_small.edges()},
-    ax=axs[0],
-)
-axs[0].set_title("Graph with 5 nodes")
-
-# Medium graph
-nx.draw(
-    G_medium,
-    pos_medium,
-    with_labels=True,
-    ax=axs[1],
-    node_color="lightgreen",
-    font_size=8,
-)
-nx.draw_networkx_edge_labels(
-    G_medium,
-    pos_medium,
-    edge_labels={(u, v): G_medium[u][v]["weight"] for u, v in G_medium.edges()},
-    ax=axs[1],
-    font_size=6,
-)
-axs[1].set_title("Graph with 10 nodes")
-
-# Large graph
-nx.draw(
-    G_large,
-    pos_large,
-    with_labels=True,
-    ax=axs[2],
-    node_color="lightcoral",
-    font_size=6,
-)
-nx.draw_networkx_edge_labels(
-    G_large,
-    pos_large,
-    edge_labels={(u, v): G_large[u][v]["weight"] for u, v in G_large.edges()},
-    ax=axs[2],
-    font_size=4,
-)
-axs[2].set_title("Graph with 20 nodes")
-
-plt.tight_layout()
+#| fig-cap: "規模の異なるグラフの例（頂点数は左から順に5，10，20．辺の重みは省略している）"
+# この図では規模の違いに注目するため，辺の重みを省略する．
+scale_graphs = [
+    nx.gnm_random_graph(5, 10, seed=0),
+    nx.gnm_random_graph(10, 15, seed=1),
+    nx.gnm_random_graph(20, 25, seed=5),
+]
+fig, axes = plt.subplots(1, 3, figsize=(12, 4.4))
+fig.subplots_adjust(left=0.02, right=0.98, top=0.79, bottom=0.12, wspace=0.18)
+for ax, sample in zip(axes, scale_graphs):
+    # 円周上に等間隔で配置し，頂点数が増えてもラベルを重ねない．
+    positions = nx.circular_layout(sample)
+    nx.draw_networkx_edges(sample, positions, ax=ax, edge_color=EDGE, width=1.6)
+    nx.draw_networkx_nodes(sample, positions, ax=ax, node_size=300,
+                           node_color=PALE, edgecolors=BLUE, linewidths=1.2)
+    nx.draw_networkx_labels(sample, positions, ax=ax, font_family=FONT,
+                            font_size=10, font_color=INK)
+    ax.set_title(f"頂点数：{sample.number_of_nodes()}", fontsize=17, fontweight="bold", pad=18, color=BLUE)
+    ax.text(0.5, -0.08, f"辺の数：{sample.number_of_edges()}", transform=ax.transAxes,
+            ha="center", fontsize=12)
+    ax.margins(0.18)
+    ax.axis("off")
 plt.show()
 ```
 
@@ -421,32 +564,7 @@ flowchart LR
 ```{python}
 #| label: fig-search-graph
 #| fig-cap: "探索の対象となるグラフ（辺の数値は移動コスト）"
-# Create a graph with nodes and edges
-G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# Create a list of edges in the shortest path
-path_edges = list(zip(path, path[1:]))
-
-node_color = "lightblue"  # Color for nodes
-edge_color ="lightgray"  # Color for edges
-
-# Visualize the graph
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
-)
-
-plt.show()
+draw_search_graph(note="以下の図でも，頂点の配置は変わらない．")
 ```
 
 **Step 1:**
@@ -457,46 +575,122 @@ Aを展開し，BとDを得る．
 
 ```{python}
 #| label: fig-expand-a
-#| fig-cap: "頂点Aの展開：BとDへの辺を赤色で示す"
-# Create a graph with nodes and edges
-G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# Create a list of edges in the shortest path
-path_edges = list(zip(path, path[1:]))
-
-node_color = "lightblue"  # Color for nodes
-edge_color = [
-    "lightgray" if (u, v) not in [("A", "B"), ("A", "D")] else "crimson"
-    for u, v in G.edges()
-]
-
-# Visualize the graph
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
-)
-
-plt.show()
+#| fig-cap: "頂点Aの展開（次の移動先の候補はBとD）"
+draw_search_graph(current="A", candidates=("B", "D"),
+                  note="初期状態：A    移動先の候補：B，D")
 ```
 
 これを探索木として表すと，以下のようになる．
 
-```{mermaid}
-%%| label: fig-search-tree-a
-%%| fig-cap: "Aを展開した後の探索木"
-flowchart TD
-    id1[A] -- 4 --> id2[B]
-    id1 -- 2 --> id3[D]
+```{python}
+#| label: fig-search-tree-a
+#| fig-cap: "Aを展開した後の探索木．辺の数値は移動コスト，「合計」は初期状態からのコストの合計を表す．"
+def make_search_tree(graph, start, goal):
+    """同じ経路内の頂点の再訪を除き，経路ごとに異なる木の節点を作る．"""
+    root = (start,)
+    tree = nx.DiGraph()
+    tree.add_node(root, cost=0)
+    queue = deque([root])
+    snapshots = []
+    while queue:
+        route = queue.popleft()
+        if route[-1] == goal:
+            continue
+        added = []
+        for neighbor in graph.neighbors(route[-1]):
+            if neighbor in route:
+                continue
+            child = route + (neighbor,)
+            weight = graph[route[-1]][neighbor]["weight"]
+            tree.add_node(child, cost=tree.nodes[route]["cost"] + weight)
+            tree.add_edge(route, child, weight=weight)
+            queue.append(child)
+            added.append(child)
+        if added:
+            snapshots.append((tuple(tree.nodes), route, tuple(added)))
+    return tree, snapshots
+
+
+search_tree, tree_snapshots = make_search_tree(G, "A", "E")
+
+
+def tree_positions(tree, root, *, dx=2.4, dy=1.6):
+    """完成した木を基準に，途中の図でも同じ節点を同じ位置に置く．"""
+    positions = {}
+    leaves = []
+
+    def place(node, depth):
+        children = list(tree.successors(node))
+        if children:
+            x = sum(place(child, depth + 1) for child in children) / len(children)
+        else:
+            x = dx * len(leaves)
+            leaves.append(node)
+        positions[node] = (x, -dy * depth)
+        return x
+
+    place(root, 0)
+    return positions
+
+
+tree_pos = tree_positions(search_tree, ("A",))
+
+
+def draw_search_tree(stage=None):
+    if stage is None:
+        visible = tuple(search_tree.nodes)
+        current, added = None, ()
+        goals = [node for node in visible if node[-1] == "E"]
+        best = min(goals, key=lambda node: search_tree.nodes[node]["cost"])
+        marked = [(best[:i], best[:i + 1]) for i in range(1, len(best))]
+    else:
+        visible, current, added = tree_snapshots[stage]
+        marked = [(current, child) for child in added]
+    tree = search_tree.subgraph(visible)
+    depth = max(len(node) - 1 for node in visible)
+    fig, ax = plt.subplots(figsize=(8.4, 1.8 + 1.05 * depth))
+    nx.draw_networkx_edges(tree, tree_pos, ax=ax, edge_color=EDGE,
+                           width=1.8, arrowsize=17, node_size=800)
+    nx.draw_networkx_edges(tree, tree_pos, ax=ax, edgelist=marked,
+                           edge_color=ACCENT, width=2.8, arrowsize=19, node_size=800)
+    for node in visible:
+        color = GREEN if node[-1] == "E" else ACCENT if node == current else BLUE if len(node) == 1 else PALE
+        nx.draw_networkx_nodes(tree, tree_pos, ax=ax, nodelist=[node],
+                               node_size=800, node_color=color,
+                               edgecolors=ACCENT if node in added else color if color != PALE else EDGE,
+                               linewidths=2)
+        nx.draw_networkx_labels(tree, tree_pos, ax=ax, labels={node: node[-1]},
+                                font_family=FONT, font_size=15,
+                                font_color=INK if color == PALE else "white")
+        ax.annotate(f"合計：{tree.nodes[node]['cost']}", tree_pos[node],
+                    xytext=(0, -23), textcoords="offset points", ha="center", va="top",
+                    fontsize=10, color=GREEN if node[-1] == "E" else INK,
+                    bbox=dict(fc="white", ec="none", pad=0.5))
+    for parent, child, weight in tree.edges(data="weight"):
+        active = (parent, child) in marked
+        x1, y1 = tree_pos[parent]
+        x2, y2 = tree_pos[child]
+        vertical = abs(x1 - x2) < 1e-9
+        # 縦の枝では，辺の重みを右下にずらして「合計」との重なりを避ける．
+        x = x1 + 0.3 if vertical else 0.45 * x1 + 0.55 * x2
+        y = 0.3 * y1 + 0.7 * y2 if vertical else 0.45 * y1 + 0.55 * y2
+        ax.text(x, y, str(weight), ha="left" if vertical else "center", va="center",
+                fontsize=11, color=ACCENT if active else INK,
+                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none"))
+    handles = [Line2D([], [], color=ACCENT, lw=2.8,
+                      label="最短経路" if stage is None else "新しく加わった枝")]
+    if any(node[-1] == "E" for node in visible):
+        handles.append(Line2D([], [], marker="o", linestyle="none", color=GREEN,
+                              markersize=9, label="目標状態"))
+    ax.set(xlim=(-1.1, 8.3), ylim=(-1.6 * depth - 0.8, 0.6))
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.04),
+              ncol=2, frameon=False, fontsize=10)
+    ax.axis("off")
+    fig.subplots_adjust(left=0.03, right=0.97, top=0.96, bottom=0.18)
+    plt.show()
+
+
+draw_search_tree(0)
 ```
 
 **Step 2:**
@@ -507,38 +701,9 @@ flowchart TD
 
 ```{python}
 #| label: fig-expand-b
-#| fig-cap: "頂点Bの展開：CとDへの辺を赤色で示す"
-# Create a graph with nodes and edges
-G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# Create a list of edges in the shortest path
-path_edges = list(zip(path, path[1:]))
-
-node_color = "lightblue"  # Color for nodes
-# set (A, B) to color black, (B, C) and (B, D) to crimson, and other edges to light gray
-edge_color = [
-    "black" if (u, v) == ("A", "B") else
-    "crimson" if (u, v) in [("B", "C"), ("B", "D")] else
-    "lightgray"
-    for u, v in G.edges()
-]
-# Visualize the graph
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
-)
-
-plt.show()
+#| fig-cap: "頂点Bの展開（次の移動先の候補はCとD）"
+draw_search_graph(current="B", candidates=("C", "D"),
+                  note="ここまでの経路：A → B（Aに戻る経路は探索しない）")
 ```
 
 そのため，以下のルールを定義する．
@@ -547,14 +712,10 @@ plt.show()
 
 探索木を更新すると，以下のようになる．
 
-```{mermaid}
-%%| label: fig-search-tree-b
-%%| fig-cap: "Bを展開した後の探索木（Aへ戻る経路は除外）"
-flowchart TD
-    id1[A] -- 4 --> id2[B]
-    id1 -- 2 --> id3[D]
-    id2[B] -- 4 --> id4[C]
-    id2[B] -- 1 --> id5[D]
+```{python}
+#| label: fig-search-tree-b
+#| fig-cap: "Bを展開した後の探索木．Aへ戻る経路は除外し，新しく加わった枝を赤色で示す．"
+draw_search_tree(1)
 ```
 
 次に，どの順番で頂点を探索していくかを決める必要がある．
@@ -569,53 +730,17 @@ flowchart TD
 
 ```{python}
 #| label: fig-expand-d
-#| fig-cap: "頂点Dの展開：BとEへの辺を赤色で示す"
-# Create a graph with nodes and edges
-G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# Create a list of edges in the shortest path
-path_edges = list(zip(path, path[1:]))
-
-node_color = "lightblue"  # Color for nodes
-# set (A, D) to color black, (B, D) and (D, E) to crimson, and other edges to light gray
-edge_color = [
-    "black" if (u, v) == ("A", "D") else
-    "crimson" if (u, v) in [("B", "D"), ("D", "E")] else
-    "lightgray"
-    for u, v in G.edges()
-]
-
-# Visualize the graph
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
-)
-
-plt.show()
+#| fig-cap: "頂点Dの展開（次の移動先の候補はBとE）"
+draw_search_graph(current="D", candidates=("B", "E"),
+                  note="ここまでの経路：A → D（Aに戻る経路は探索しない）")
 ```
 
 探索木を更新すると，以下のようになる．
 
-```{mermaid}
-%%| label: fig-search-tree-d
-%%| fig-cap: "Dを展開した後の探索木（最初の解A → D → Eが得られる）"
-flowchart TD
-    id1[A] -- 4 --> id2[B]
-    id1 -- 2 --> id3[D]
-    id2[B] -- 4 --> id4[C]
-    id2[B] -- 1 --> id5[D]
-    id3[D] -- 1 --> id6[B]
-    id3[D] -- 9 --> id7[E]
+```{python}
+#| label: fig-search-tree-d
+#| fig-cap: "Dを展開した後の探索木．最初の解A → D → Eが得られ，コストの合計は11となる．"
+draw_search_tree(2)
 ```
 
 ::: {.callout-note}
@@ -631,49 +756,13 @@ flowchart TD
 ```{python}
 #| label: fig-search-graph-complete
 #| fig-cap: "探索木に対応する元のグラフ"
-# Create a graph with nodes and edges
-G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# Create a list of edges in the shortest path
-path_edges = list(zip(path, path[1:]))
-
-
-node_color = "lightblue"  # Color for nodes
-edge_color = "lightgray"  # Color for edges
-
-# Visualize the graph
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color=node_color, alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color=edge_color, width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
-)
-
-plt.show()
+draw_search_graph(note="このグラフ上の経路を，次の探索木で表す．")
 ```
 
-```{mermaid}
-%%| label: fig-search-tree-complete
-%%| fig-cap: "ループを除外して得られた探索木"
-flowchart TD
-    id1[A] -- 4 --> id2[B]
-    id1 -- 2 --> id3[D]
-    id2[B] -- 4 --> id4[C]
-    id2[B] -- 1 --> id5[D]
-    id3[D] -- 1 --> id6[B]
-    id3[D] -- 9 --> id7[E]
-    id4[C] -- 3 --> id8[E]
-    id5[D] -- 9 --> id9[E]
-    id6[B] -- 4 --> id10[C]
-    id10[C] -- 3 --> id11[E]
+```{python}
+#| label: fig-search-tree-complete
+#| fig-cap: "ループを除外して得られた探索木．赤い枝は最短経路を表し，コストの合計は10となる．"
+draw_search_tree()
 ```
 
 すべての頂点を探索した結果，以下のような解が得られた．
@@ -690,34 +779,8 @@ flowchart TD
 ```{python}
 #| label: fig-shortest-path-a-e
 #| fig-cap: "AからEへの最短経路：A → D → B → C → E（総コスト10）"
-# Create a graph with nodes and edges
-G = nx.Graph()
-G.add_nodes_from(["A", "B", "C", "D", "E"])
-G.add_edge("A", "B", weight=4)
-G.add_edge("A", "D", weight=2)
-G.add_edge("B", "C", weight=4)
-G.add_edge("B", "D", weight=1)
-G.add_edge("C", "E", weight=3)
-G.add_edge("D", "E", weight=9)
-
-# calculate the shortest path
-shortest_path = nx.shortest_path(G, source="A", target="E", weight="weight")
-shortest_path_length = nx.shortest_path_length(G, source="A", target="E", weight="weight")
-
-# Visualize the graph with the shortest path highlighted
-pos = nx.spring_layout(G, seed=1)  # Position nodes using spring layout
-nx.draw_networkx_nodes(G, pos, node_size=300, node_color="lightblue", alpha=1)
-nx.draw_networkx_edges(G, pos, edge_color="lightgray", width=2)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edge_labels(
-    G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
-)
-nx.draw_networkx_nodes(G, pos, nodelist=shortest_path, node_color="crimson", node_size=300, alpha=0.9)
-nx.draw_networkx_edges(
-    G, pos, edgelist=list(zip(shortest_path[:-1], shortest_path[1:])), edge_color="crimson", width=3
-)
-plt.title("Shortest Path from A to E")
-plt.show()
+shortest_path, shortest_path_length = compute_shortest_path(G, "A", "E")
+draw_search_graph(route=shortest_path)
 ```
 
 ### アルゴリズムの表現
@@ -746,7 +809,59 @@ plt.show()
 
 ### 計算例：8パズル
 
-![8パズルの幅優先探索の例．最短2手で目標状態に到達する．](images/8-puzzle-bfs.svg){#fig-8-puzzle-bfs width=300px fig-alt="8パズルの幅優先探索"}
+```{python}
+#| label: fig-8-puzzle-bfs
+#| fig-cap: "8パズルの幅優先探索．同じ状態への再訪を除き，2手先までの全ての状態を示す．赤い矢印は最短手順を，色のついたコマは直前に動かしたコマを表す．"
+#| fig-alt: "初期状態から1手先の4状態と2手先の8状態を示す探索木．最短2手で目標状態に到達する．"
+puzzle_bfs_start = (1, 2, 3, 4, 0, 6, 7, 5, 8)
+
+
+def make_puzzle_tree(start, max_depth):
+    tree = nx.DiGraph()
+    tree.add_node(start, depth=0, moved_tile=None)
+    queue = deque([start])
+    while queue:
+        state = queue.popleft()
+        depth = tree.nodes[state]["depth"]
+        if depth == max_depth:
+            continue
+        for child, tile in puzzle_moves(state):
+            if child in tree:
+                continue
+            tree.add_node(child, depth=depth + 1, moved_tile=tile)
+            tree.add_edge(state, child)
+            queue.append(child)
+    return tree
+
+
+puzzle_tree = make_puzzle_tree(puzzle_bfs_start, 2)
+puzzle_pos = tree_positions(puzzle_tree, puzzle_bfs_start, dx=3.1, dy=5)
+puzzle_solution = nx.shortest_path(puzzle_tree, puzzle_bfs_start, puzzle_goal)
+puzzle_solution_edges = set(zip(puzzle_solution, puzzle_solution[1:]))
+fig, ax = plt.subplots(figsize=(11.5, 7.0))
+for parent, child in puzzle_tree.edges:
+    x1, y1 = puzzle_pos[parent]
+    x2, y2 = puzzle_pos[child]
+    active = (parent, child) in puzzle_solution_edges
+    ax.annotate("", xy=(x2, y2 + 1.35), xytext=(x1, y1 - 1.35),
+                arrowprops=dict(arrowstyle="-|>", color=ACCENT if active else EDGE,
+                                lw=2.5 if active else 1.3, mutation_scale=14))
+for state in puzzle_tree:
+    color = GREEN if state == puzzle_goal else BLUE if state == puzzle_bfs_start else EDGE
+    draw_puzzle_board(ax, state, puzzle_pos[state], size=2.5,
+                      moved_tile=puzzle_tree.nodes[state]["moved_tile"],
+                      outline=color, font_size=14)
+    if state == puzzle_goal:
+        x, y = puzzle_pos[state]
+        ax.text(x, y - 1.85, "目標状態", ha="center", fontsize=12, color=GREEN)
+for depth in range(3):
+    ax.text(-2.2, -5 * depth, "初期状態" if depth == 0 else f"{depth}手後",
+            ha="right", va="center", fontsize=12, color=BLUE)
+ax.set(xlim=(-5.5, 23.3), ylim=(-12.3, 1.7), aspect="equal")
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
 
 ### 計算時間
 
