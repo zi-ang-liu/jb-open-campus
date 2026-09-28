@@ -162,9 +162,9 @@ window.Quarto = {
 
 <meta name="twitter:title" content="1&nbsp; 探索による問題解決 – オープンキャンパス模擬授業">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://zi-ang-liu.github.io/jb-open-campus/search_files/figure-html/cell-2-output-1.png">
-<meta name="twitter:image-height" content="741">
-<meta name="twitter:image-width" content="1516">
+<meta name="twitter:image" content="https://zi-ang-liu.github.io/jb-open-campus/search_files/figure-html/fig-rail-network-output-1.png">
+<meta name="twitter:image-height" content="1099">
+<meta name="twitter:image-width" content="2328">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -464,11 +464,16 @@ window.Quarto = {
 <h2 data-number="1.2" class="anchored" data-anchor-id="クイズ"><span class="header-section-number">1.2</span> クイズ</h2>
 <p>田中さんは，法政大学のオープンキャンパスに参加するため，横浜駅から東小金井駅までできるだけ早く行きたいと思っている．</p>
 <p>下の図は，電車路線を単純化したものである．頂点は駅，線は駅と駅を結ぶ線路を表し，数値は，所要時間（分）を表す．</p>
-<div id="46eacae4" class="cell" data-execution_count="1">
+<div id="cell-fig-rail-network" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-2-output-1.png" width="758" height="371" class="figure-img"></p>
+<div id="fig-rail-network" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rail-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-rail-network-output-1.png" width="1164" height="549" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rail-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.1: 横浜駅から東小金井駅までの路線図（辺の数値は所要時間［分］）
+</figcaption>
 </figure>
 </div>
 </div>
@@ -491,15 +496,16 @@ window.Quarto = {
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="50dd3da5" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-stdout">
-<pre><code>答え: 横浜 ➝ 新宿 ➝ 東小金井
-時間: 55 分</code></pre>
-</div>
+<div id="cell-fig-rail-shortest-answer" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-3-output-2.png" width="758" height="371" class="figure-img"></p>
+<div id="fig-rail-shortest-answer" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rail-shortest-answer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-rail-shortest-answer-output-1.png" width="1164" height="549" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rail-shortest-answer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.2: 横浜駅から東小金井駅までの最短経路（所要時間55分）
+</figcaption>
 </figure>
 </div>
 </div>
@@ -513,16 +519,21 @@ window.Quarto = {
 <h2 data-number="1.3" class="anchored" data-anchor-id="問題解決の手順"><span class="header-section-number">1.3</span> 問題解決の手順</h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
+<div id="fig-problem-solving-process" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-problem-solving-process-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
+<pre class="mermaid mermaid-js" data-label="fig-problem-solving-process">flowchart TD
     問題の理解 --&gt; 数学モデル
     数学モデル --&gt; アルゴリズム
     アルゴリズム --&gt; 答え
 </pre>
 </div>
-<p></p></figure><p></p>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-problem-solving-process-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.3: 問題の理解から答えを得るまでの手順
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -606,11 +617,16 @@ window.Quarto = {
 <li>横浜駅 -&gt; 新宿駅 -&gt; 東小金井駅（総コストは55分）</li>
 </ul></li>
 </ul>
-<div id="aa0f32d4" class="cell" data-execution_count="3">
+<div id="cell-fig-rail-optimal-solution" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-4-output-1.png" width="758" height="371" class="figure-img"></p>
+<div id="fig-rail-optimal-solution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rail-optimal-solution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-rail-optimal-solution-output-1.png" width="1164" height="549" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rail-optimal-solution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.4: 最適解の例：横浜駅から新宿駅を経由して東小金井駅へ向かう経路
+</figcaption>
 </figure>
 </div>
 </div>
@@ -633,15 +649,19 @@ window.Quarto = {
 </div>
 <section id="問題例8パズル" class="level3" data-number="1.5.1">
 <h3 data-number="1.5.1" class="anchored" data-anchor-id="問題例8パズル"><span class="header-section-number">1.5.1</span> 問題例：8パズル</h3>
-<div id="fig-8-puzzle" class="quarto-float quarto-figure quarto-figure-center anchored" alt="8パズル">
+<div id="cell-fig-8-puzzle" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-8-puzzle" class="quarto-float quarto-figure quarto-figure-center anchored" alt="8パズルの初期状態と目標状態">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-8-puzzle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/8-puzzle.svg" class="img-fluid figure-img" alt="8パズル" width="300">
+<img src="search_files/figure-html/fig-8-puzzle-output-1.png" alt="8パズルの初期状態と目標状態" width="1052" height="531" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-8-puzzle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.1: 8パズルの例．初期状態が与えられ，数字のついたコマをスライドさせて目標状態に到達するゲーム．
+図&nbsp;1.5: 8パズルの例．空いているマスに隣接するコマを動かし，初期状態から目標状態への到達を目指す．
 </figcaption>
 </figure>
+</div>
+</div>
 </div>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -677,7 +697,7 @@ window.Quarto = {
 <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/Maze_simple.svg" class="img-fluid figure-img" alt="迷路" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-maze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.2: 迷路の例．スタート地点（初期状態）からゴール地点（目標状態）までの経路を見つけるゲーム．Image by Jkwchui / CC0 1.0 (Public Domain)
+図&nbsp;1.6: 迷路の例．スタート地点（初期状態）からゴール地点（目標状態）までの経路を見つけるゲーム．Image by Jkwchui / CC0 1.0 (Public Domain)
 </figcaption>
 </figure>
 </div>
@@ -726,11 +746,16 @@ window.Quarto = {
 <p>🤔では，どうやって探索するのか？</p>
 <p>ここでは抽象化した例で説明を進める．</p>
 <p>今，初期状態Aから，目標状態Eへ到達するための経路を探索する問題を考える．</p>
-<div id="35220bae" class="cell" data-execution_count="4">
+<div id="cell-fig-weighted-graph" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-5-output-1.png" width="540" height="389" class="figure-img"></p>
+<div id="fig-weighted-graph" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-weighted-graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-weighted-graph-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-weighted-graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.7: 初期状態Aから目標状態Eへの最短経路を求める重み付きグラフ
+</figcaption>
 </figure>
 </div>
 </div>
@@ -746,11 +771,16 @@ window.Quarto = {
 </dd>
 </dl>
 <p>次の図に示すように，グラフには小規模なものもあれば，非常に多くの頂点や辺をもつ大規模なものもある．小規模な問題であれば，手作業で最短経路を見つけることも可能であるが，グラフの規模が大きくなると，手作業では解決が難しくなる．</p>
-<div id="99528957" class="cell" data-execution_count="5">
+<div id="cell-fig-graph-scales" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-6-output-1.png" width="1718" height="566" class="figure-img"></p>
+<div id="fig-graph-scales" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-graph-scales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-graph-scales-output-1.png" width="1757" height="579" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-graph-scales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.8: 規模の異なるグラフの例（頂点数は左から順に5，10，20．辺の重みは省略している）
+</figcaption>
 </figure>
 </div>
 </div>
@@ -769,14 +799,19 @@ window.Quarto = {
 <p>アルゴリズムとは，問題を解決するための手順のことを指す．</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
+<div id="fig-algorithm-role" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-algorithm-role-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
+<pre class="mermaid mermaid-js" data-label="fig-algorithm-role">flowchart LR
     問題例 --&gt; アルゴリズム --&gt; 解
 </pre>
 </div>
-<p></p></figure><p></p>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-algorithm-role-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.9: アルゴリズムによって問題例から解を得る流れ
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -787,11 +822,16 @@ window.Quarto = {
 <h2 data-number="1.7" class="anchored" data-anchor-id="探索アルゴリズム"><span class="header-section-number">1.7</span> 探索アルゴリズム</h2>
 <p>最も単純なアルゴリズムは，全ての可能な経路を<strong>系統的</strong>に列挙し，その中から最短のものを選ぶ方法である．</p>
 <p>ここでは，<strong>探索木</strong>（search tree）を使用し，経路を探索する方法を紹介する．</p>
-<div id="fe8132a9" class="cell" data-execution_count="6">
+<div id="cell-fig-search-graph" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-7-output-1.png" width="540" height="389" class="figure-img"></p>
+<div id="fig-search-graph" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-search-graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-search-graph-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-search-graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.10: 探索の対象となるグラフ（辺の数値は移動コスト）
+</figcaption>
 </figure>
 </div>
 </div>
@@ -799,38 +839,48 @@ window.Quarto = {
 <p><strong>Step 1:</strong></p>
 <p>初期状態Aから探索を開始する．</p>
 <p>Aを展開し，BとDを得る．</p>
-<div id="f558602c" class="cell" data-execution_count="7">
+<div id="cell-fig-expand-a" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-8-output-1.png" width="540" height="389" class="figure-img"></p>
+<div id="fig-expand-a" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-expand-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-expand-a-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expand-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.11: 頂点Aの展開（次の移動先の候補はBとD）
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>これを探索木として表すと，以下のようになる．</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    id1[A] -- 4 --&gt; id2[B]
-    id1 -- 2 --&gt; id3[D]
-</pre>
+<div id="cell-fig-search-tree-a" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-search-tree-a" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-search-tree-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-search-tree-a-output-1.png" width="1214" height="424" class="figure-img">
 </div>
-<p></p></figure><p></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-search-tree-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.12: Aを展開した後の探索木．辺の数値は移動コスト，「合計」は初期状態からのコストの合計を表す．
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 <p><strong>Step 2:</strong></p>
 <p>次に，Bを展開し，A，C，Dを得る．</p>
 <p>ただし，再びAへ戻るような経路 (A, B, A)は，ループとなり，最適な経路ではないので，探索する必要はない．</p>
-<div id="902963f4" class="cell" data-execution_count="8">
+<div id="cell-fig-expand-b" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-9-output-1.png" width="540" height="389" class="figure-img"></p>
+<div id="fig-expand-b" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-expand-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-expand-b-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expand-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.13: 頂点Bの展開（次の移動先の候補はCとD）
+</figcaption>
 </figure>
 </div>
 </div>
@@ -840,19 +890,17 @@ window.Quarto = {
 <li><strong>ルール1</strong>：(A, B, A)，(A, D, A)のようなすでに通過した頂点に再び戻るような経路（ループ）は，探索の対象から除外する．</li>
 </ul>
 <p>探索木を更新すると，以下のようになる．</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    id1[A] -- 4 --&gt; id2[B]
-    id1 -- 2 --&gt; id3[D]
-    id2[B] -- 4 --&gt; id4[C]
-    id2[B] -- 1 --&gt; id5[D]
-</pre>
+<div id="cell-fig-search-tree-b" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div id="fig-search-tree-b" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-search-tree-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-search-tree-b-output-1.png" width="1214" height="552" class="figure-img">
 </div>
-<p></p></figure><p></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-search-tree-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.14: Bを展開した後の探索木．Aへ戻る経路は除外し，新しく加わった枝を赤色で示す．
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -863,31 +911,32 @@ window.Quarto = {
 </ul>
 <p><strong>Step 3:</strong></p>
 <p>ルール1に従い，Dを展開し，BとEを得る．</p>
-<div id="09c23cac" class="cell" data-execution_count="9">
+<div id="cell-fig-expand-d" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-10-output-1.png" width="540" height="389" class="figure-img"></p>
+<div id="fig-expand-d" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-expand-d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-expand-d-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expand-d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.15: 頂点Dの展開（次の移動先の候補はBとE）
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>探索木を更新すると，以下のようになる．</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    id1[A] -- 4 --&gt; id2[B]
-    id1 -- 2 --&gt; id3[D]
-    id2[B] -- 4 --&gt; id4[C]
-    id2[B] -- 1 --&gt; id5[D]
-    id3[D] -- 1 --&gt; id6[B]
-    id3[D] -- 9 --&gt; id7[E]
-</pre>
+<div id="cell-fig-search-tree-d" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display">
+<div id="fig-search-tree-d" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-search-tree-d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-search-tree-d-output-1.png" width="1214" height="552" class="figure-img">
 </div>
-<p></p></figure><p></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-search-tree-d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.16: Dを展開した後の探索木．最初の解A → D → Eが得られ，コストの合計は11となる．
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -906,34 +955,31 @@ window.Quarto = {
 </div>
 <p><strong>Step 4:</strong></p>
 <p>同じ手順を繰り返すと，最終的に以下のような探索木が得られる．</p>
-<div id="31320572" class="cell" data-execution_count="10">
+<div id="cell-fig-search-graph-complete" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-11-output-1.png" width="540" height="389" class="figure-img"></p>
+<div id="fig-search-graph-complete" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-search-graph-complete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-search-graph-complete-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-search-graph-complete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.17: 探索木に対応する元のグラフ
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    id1[A] -- 4 --&gt; id2[B]
-    id1 -- 2 --&gt; id3[D]
-    id2[B] -- 4 --&gt; id4[C]
-    id2[B] -- 1 --&gt; id5[D]
-    id3[D] -- 1 --&gt; id6[B]
-    id3[D] -- 9 --&gt; id7[E]
-    id4[C] -- 3 --&gt; id8[E]
-    id5[D] -- 9 --&gt; id9[E]
-    id6[B] -- 4 --&gt; id10[C]
-    id10[C] -- 3 --&gt; id11[E]
-</pre>
+<div id="cell-fig-search-tree-complete" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display">
+<div id="fig-search-tree-complete" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-search-tree-complete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-search-tree-complete-output-1.png" width="1214" height="807" class="figure-img">
 </div>
-<p></p></figure><p></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-search-tree-complete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.18: ループを除外して得られた探索木．赤い枝は最短経路を表し，コストの合計は10となる．
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -965,11 +1011,16 @@ window.Quarto = {
 </tbody>
 </table>
 <p>最短経路は，A ➝ D ➝ B ➝ C ➝ Eで，コストは10である．</p>
-<div id="6a352163" class="cell" data-execution_count="11">
+<div id="cell-fig-shortest-path-a-e" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="search_files/figure-html/cell-12-output-1.png" width="540" height="409" class="figure-img"></p>
+<div id="fig-shortest-path-a-e" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shortest-path-a-e-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="search_files/figure-html/fig-shortest-path-a-e-output-1.png" width="1164" height="514" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shortest-path-a-e-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;1.19: AからEへの最短経路：A → D → B → C → E（総コスト10）
+</figcaption>
 </figure>
 </div>
 </div>
@@ -983,7 +1034,7 @@ window.Quarto = {
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Breadth-first-tree.svg" class="img-fluid figure-img" alt="幅優先探索">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bfs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.3: 幅優先探索の例 © Alexander Drichel, CC BY-SA 3.0
+図&nbsp;1.20: 幅優先探索の例 © Alexander Drichel, CC BY-SA 3.0
 </figcaption>
 </figure>
 </div>
@@ -1026,15 +1077,19 @@ window.Quarto = {
 </section>
 <section id="計算例8パズル" class="level3" data-number="1.7.2">
 <h3 data-number="1.7.2" class="anchored" data-anchor-id="計算例8パズル"><span class="header-section-number">1.7.2</span> 計算例：8パズル</h3>
-<div id="fig-8-puzzle-bfs" class="quarto-float quarto-figure quarto-figure-center anchored" alt="8パズルの幅優先探索">
+<div id="cell-fig-8-puzzle-bfs" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display">
+<div id="fig-8-puzzle-bfs" class="quarto-float quarto-figure quarto-figure-center anchored" alt="初期状態から1手先の4状態と2手先の8状態を示す探索木．最短2手で目標状態に到達する．">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-8-puzzle-bfs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/8-puzzle-bfs.svg" class="img-fluid figure-img" alt="8パズルの幅優先探索" width="300">
+<img src="search_files/figure-html/fig-8-puzzle-bfs-output-1.png" alt="初期状態から1手先の4状態と2手先の8状態を示す探索木．最短2手で目標状態に到達する．" width="1701" height="842" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-8-puzzle-bfs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.4: 8パズルの幅優先探索の例．最短2手で目標状態に到達する．
+図&nbsp;1.21: 8パズルの幅優先探索．同じ状態への再訪を除き，2手先までの全ての状態を示す．赤い矢印は最短手順を，色のついたコマは直前に動かしたコマを表す．
 </figcaption>
 </figure>
+</div>
+</div>
 </div>
 </section>
 <section id="計算時間" class="level3" data-number="1.7.3">
@@ -1089,26 +1144,26 @@ window.Quarto = {
 <section id="プログラミング" class="level2" data-number="1.8">
 <h2 data-number="1.8" class="anchored" data-anchor-id="プログラミング"><span class="header-section-number">1.8</span> プログラミング</h2>
 <p>上記のアルゴリズムを実装するのは難しそうだが，実は以下のように簡単に実装できる．</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bfs(graph, start, goal):</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    queue <span class="op">=</span> deque([(start, [start])])</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    visited <span class="op">=</span> <span class="bu">set</span>()</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> queue:</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        current_node, path <span class="op">=</span> queue.popleft()</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_node <span class="op">==</span> goal:</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> path</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_node <span class="kw">not</span> <span class="kw">in</span> visited:</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            visited.add(current_node)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> neighbor <span class="kw">in</span> graph.get(current_node, []):</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> visited:</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                    queue.append((neighbor, path <span class="op">+</span> [neighbor]))</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bfs(graph, start, goal):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    queue <span class="op">=</span> deque([(start, [start])])</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    visited <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> queue:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        current_node, path <span class="op">=</span> queue.popleft()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_node <span class="op">==</span> goal:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> path</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_node <span class="kw">not</span> <span class="kw">in</span> visited:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            visited.add(current_node)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> neighbor <span class="kw">in</span> graph.get(current_node, []):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> visited:</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                    queue.append((neighbor, path <span class="op">+</span> [neighbor]))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 <p>この資料に載せているほとんどの図は，プログラムで自動生成している．</p>
 </section>
 <section id="実社会での応用例" class="level2" data-number="1.9">
@@ -1121,7 +1176,7 @@ window.Quarto = {
 <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Illustration_of_the_Vehicle_Routing_Problem.svg" class="img-fluid figure-img" alt="配送計画問題" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vrp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.5: 配送計画問題の例．配送センターから出発する複数のトラックが，各配送先へ荷物を届けるための最適なルートを探索する問題．Image by Zootos / CC BY-SA 4.0
+図&nbsp;1.22: 配送計画問題の例．配送センターから出発する複数のトラックが，各配送先へ荷物を届けるための最適なルートを探索する問題．Image by Zootos / CC BY-SA 4.0
 </figcaption>
 </figure>
 </div>
@@ -1134,7 +1189,7 @@ window.Quarto = {
 <img src="https://ars.els-cdn.com/content/image/1-s2.0-S0952197625005305-gr1_lrg.jpg" class="img-fluid figure-img" alt="組立工程のレイアウト" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.6: 組立工程のレイアウト最適化の例．各工程を効率的に配置するための最適な順序を探索する．Image by Kawabe et al.&nbsp;(2025) / CC BY-NC-ND 4.0
+図&nbsp;1.23: 組立工程のレイアウト最適化の例．各工程を効率的に配置するための最適な順序を探索する．Image by Kawabe et al.&nbsp;(2025) / CC BY-NC-ND 4.0
 </figcaption>
 </figure>
 </div>
@@ -1147,7 +1202,7 @@ window.Quarto = {
 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Diopsis.jpg" class="img-fluid figure-img" alt="VLSIのダイ" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vlsi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.7: VLSIのダイ．VLSIは数万個の論理ゲートで構成される．VLSIのレイアウト設計最適化は，非常に難しい問題である．Image by J. M. C. Pereira / CC BY-SA 4.0
+図&nbsp;1.24: VLSIのダイ．VLSIは数万個の論理ゲートで構成される．VLSIのレイアウト設計最適化は，非常に難しい問題である．Image by J. M. C. Pereira / CC BY-SA 4.0
 </figcaption>
 </figure>
 </div>
@@ -1161,7 +1216,7 @@ window.Quarto = {
 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/MCTS_Algorithm.png" class="img-fluid figure-img" alt="モンテカルロ木探索" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mcts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1.8: モンテカルロ木探索の例．Image by Robert Moss / CC BY-SA 4.0
+図&nbsp;1.25: モンテカルロ木探索の例．Image by Robert Moss / CC BY-SA 4.0
 </figcaption>
 </figure>
 </div>
